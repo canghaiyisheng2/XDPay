@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+<!--    <classPathEntry  location="D:\Maven\apache-maven-3.6.3\repository\mysql\mysql-connector-java\8.0.25\mysql-connector-java-8.0.25.jar"/>-->
+    <!--     <classPathEntry location="classpath:mysql-connector-java-5.1.30.jar" />-->
+    <context id="testTables" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://110.42.188.177/pet_home" userId="mysql" password="mysql">
+        </jdbcConnection>
+        <!-- <jdbcConnection driverClass="oracle.jdbc.OracleDriver"
+        connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:yycg" userId="yycg"  password="yycg">
+        </jdbcConnection> -->
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和
+        NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+        <!-- targetPackage：指定 POJO 类生成后所在的包的位置 targetProject:指定生成 POJO 类的位置 -->
+        <javaModelGenerator targetPackage="com.cn.petshome.paymentgateway.po" targetProject="D:\IDEA\petsHome\payment-gateway\src\main\java">
+            <!-- enableSubPackages:是否让 schema 做为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 从数据库返回的值被清理先后的空格 -->
+            <property name="trimStrings" value="false" />
+        </javaModelGenerator>
+        <!-- targetProject:mapper映射文件生成的位置 -->
+        <sqlMapGenerator targetPackage="mapper-config"
+                         targetProject="D:\IDEA\petsHome\payment-gateway\src\main\resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+        <!-- targetPackage：mapper接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.cn.petshome.paymentgateway.mapper" targetProject="D:\IDEA\petsHome\payment-gateway\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+        <!-- 指定数据库表 -->
+        <table tableName="t_pay_order" domainObjectName="PayOrder"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <table tableName="t_pay_txn_jnl" domainObjectName="PayTxnJnl"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <table tableName="t_order_pay_method" domainObjectName="OrderPayMethod"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+    </context>
+</generatorConfiguration>

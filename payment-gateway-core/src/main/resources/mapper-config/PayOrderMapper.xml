@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.petshome.paymentgateway.mapper.PayOrderMapper">
+  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.PayOrderDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId" />
+    <result column="request_order_id" jdbcType="VARCHAR" property="requestOrderId" />
+    <result column="request_order_type" jdbcType="VARCHAR" property="requestOrderType" />
+    <result column="total_amount" jdbcType="BIGINT" property="totalAmount" />
+    <result column="actual_pay_amt" jdbcType="BIGINT" property="actualPayAmt" />
+    <result column="other_pay_amt" jdbcType="BIGINT" property="otherPayAmt" />
+    <result column="auth_code" jdbcType="VARCHAR" property="authCode" />
+    <result column="pay_data" jdbcType="VARCHAR" property="payData" />
+    <result column="pay_image_url" jdbcType="VARCHAR" property="payImageUrl" />
+    <result column="order_appendix" jdbcType="VARCHAR" property="orderAppendix" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="expire_time" jdbcType="VARCHAR" property="expireTime" />
+    <result column="channel_type" jdbcType="VARCHAR" property="channelType" />
+    <result column="payment_type" jdbcType="VARCHAR" property="paymentType" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="request_date" jdbcType="DATE" property="requestDate" />
+    <result column="request_time" jdbcType="VARCHAR" property="requestTime" />
+    <result column="finish_date" jdbcType="DATE" property="finishDate" />
+    <result column="finish_time" jdbcType="VARCHAR" property="finishTime" />
+    <result column="notify_url" jdbcType="VARCHAR" property="notifyUrl" />
+    <result column="notify_date" jdbcType="DATE" property="notifyDate" />
+    <result column="notify_time" jdbcType="VARCHAR" property="notifyTime" />
+    <result column="chk_sts" jdbcType="VARCHAR" property="chkSts" />
+    <result column="chk_bat_no" jdbcType="VARCHAR" property="chkBatNo" />
+    <result column="settle_date" jdbcType="VARCHAR" property="settleDate" />
+    <result column="tmp_smp" jdbcType="VARCHAR" property="tmpSmp" />
+    <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="region_id" jdbcType="VARCHAR" property="regionId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, pay_order_id, request_order_id, request_order_type, total_amount, actual_pay_amt, 
+    other_pay_amt, auth_code, pay_data, pay_image_url, order_appendix, subject, expire_time, 
+    channel_type, payment_type, status, request_date, request_time, finish_date, finish_time, 
+    notify_url, notify_date, notify_time, chk_sts, chk_bat_no, settle_date, tmp_smp, 
+    node_id, region_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_pay_order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPayOrderId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_pay_order
+    where pay_order_id = #{payOrderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_pay_order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+    insert into t_pay_order (id, user_id, pay_order_id,
+      request_order_id, request_order_type, total_amount, 
+      actual_pay_amt, other_pay_amt, auth_code, 
+      pay_data, pay_image_url, order_appendix, 
+      subject, expire_time, channel_type, 
+      payment_type, status, request_date, 
+      request_time, finish_date, finish_time, 
+      notify_url, notify_date, notify_time, 
+      chk_sts, chk_bat_no, settle_date, 
+      tmp_smp, node_id, region_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{payOrderId,jdbcType=VARCHAR}, 
+      #{requestOrderId,jdbcType=VARCHAR}, #{requestOrderType,jdbcType=VARCHAR}, #{totalAmount,jdbcType=BIGINT}, 
+      #{actualPayAmt,jdbcType=BIGINT}, #{otherPayAmt,jdbcType=BIGINT}, #{authCode,jdbcType=VARCHAR}, 
+      #{payData,jdbcType=VARCHAR}, #{payImageUrl,jdbcType=VARCHAR}, #{orderAppendix,jdbcType=VARCHAR}, 
+      #{subject,jdbcType=VARCHAR}, #{expireTime,jdbcType=VARCHAR}, #{channelType,jdbcType=VARCHAR}, 
+      #{paymentType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{requestDate,jdbcType=DATE}, 
+      #{requestTime,jdbcType=VARCHAR}, #{finishDate,jdbcType=DATE}, #{finishTime,jdbcType=VARCHAR}, 
+      #{notifyUrl,jdbcType=VARCHAR}, #{notifyDate,jdbcType=DATE}, #{notifyTime,jdbcType=VARCHAR}, 
+      #{chkSts,jdbcType=VARCHAR}, #{chkBatNo,jdbcType=VARCHAR}, #{settleDate,jdbcType=VARCHAR}, 
+      #{tmpSmp,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{regionId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+    insert into t_pay_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="payOrderId != null">
+        pay_order_id,
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id,
+      </if>
+      <if test="requestOrderType != null">
+        request_order_type,
+      </if>
+      <if test="totalAmount != null">
+        total_amount,
+      </if>
+      <if test="actualPayAmt != null">
+        actual_pay_amt,
+      </if>
+      <if test="otherPayAmt != null">
+        other_pay_amt,
+      </if>
+      <if test="authCode != null">
+        auth_code,
+      </if>
+      <if test="payData != null">
+        pay_data,
+      </if>
+      <if test="payImageUrl != null">
+        pay_image_url,
+      </if>
+      <if test="orderAppendix != null">
+        order_appendix,
+      </if>
+      <if test="subject != null">
+        subject,
+      </if>
+      <if test="expireTime != null">
+        expire_time,
+      </if>
+      <if test="channelType != null">
+        channel_type,
+      </if>
+      <if test="paymentType != null">
+        payment_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="requestDate != null">
+        request_date,
+      </if>
+      <if test="requestTime != null">
+        request_time,
+      </if>
+      <if test="finishDate != null">
+        finish_date,
+      </if>
+      <if test="finishTime != null">
+        finish_time,
+      </if>
+      <if test="notifyUrl != null">
+        notify_url,
+      </if>
+      <if test="notifyDate != null">
+        notify_date,
+      </if>
+      <if test="notifyTime != null">
+        notify_time,
+      </if>
+      <if test="chkSts != null">
+        chk_sts,
+      </if>
+      <if test="chkBatNo != null">
+        chk_bat_no,
+      </if>
+      <if test="settleDate != null">
+        settle_date,
+      </if>
+      <if test="tmpSmp != null">
+        tmp_smp,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="regionId != null">
+        region_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null">
+        #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderType != null">
+        #{requestOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalAmount != null">
+        #{totalAmount,jdbcType=BIGINT},
+      </if>
+      <if test="actualPayAmt != null">
+        #{actualPayAmt,jdbcType=BIGINT},
+      </if>
+      <if test="otherPayAmt != null">
+        #{otherPayAmt,jdbcType=BIGINT},
+      </if>
+      <if test="authCode != null">
+        #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payData != null">
+        #{payData,jdbcType=VARCHAR},
+      </if>
+      <if test="payImageUrl != null">
+        #{payImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAppendix != null">
+        #{orderAppendix,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="expireTime != null">
+        #{expireTime,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null">
+        #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null">
+        #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="requestDate != null">
+        #{requestDate,jdbcType=DATE},
+      </if>
+      <if test="requestTime != null">
+        #{requestTime,jdbcType=VARCHAR},
+      </if>
+      <if test="finishDate != null">
+        #{finishDate,jdbcType=DATE},
+      </if>
+      <if test="finishTime != null">
+        #{finishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null">
+        #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyDate != null">
+        #{notifyDate,jdbcType=DATE},
+      </if>
+      <if test="notifyTime != null">
+        #{notifyTime,jdbcType=VARCHAR},
+      </if>
+      <if test="chkSts != null">
+        #{chkSts,jdbcType=VARCHAR},
+      </if>
+      <if test="chkBatNo != null">
+        #{chkBatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="settleDate != null">
+        #{settleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpSmp != null">
+        #{tmpSmp,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null">
+        #{regionId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+    update t_pay_order
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null">
+        pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderType != null">
+        request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalAmount != null">
+        total_amount = #{totalAmount,jdbcType=BIGINT},
+      </if>
+      <if test="actualPayAmt != null">
+        actual_pay_amt = #{actualPayAmt,jdbcType=BIGINT},
+      </if>
+      <if test="otherPayAmt != null">
+        other_pay_amt = #{otherPayAmt,jdbcType=BIGINT},
+      </if>
+      <if test="authCode != null">
+        auth_code = #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payData != null">
+        pay_data = #{payData,jdbcType=VARCHAR},
+      </if>
+      <if test="payImageUrl != null">
+        pay_image_url = #{payImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAppendix != null">
+        order_appendix = #{orderAppendix,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="expireTime != null">
+        expire_time = #{expireTime,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null">
+        channel_type = #{channelType,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentType != null">
+        payment_type = #{paymentType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="requestDate != null">
+        request_date = #{requestDate,jdbcType=DATE},
+      </if>
+      <if test="requestTime != null">
+        request_time = #{requestTime,jdbcType=VARCHAR},
+      </if>
+      <if test="finishDate != null">
+        finish_date = #{finishDate,jdbcType=DATE},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyUrl != null">
+        notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyDate != null">
+        notify_date = #{notifyDate,jdbcType=DATE},
+      </if>
+      <if test="notifyTime != null">
+        notify_time = #{notifyTime,jdbcType=VARCHAR},
+      </if>
+      <if test="chkSts != null">
+        chk_sts = #{chkSts,jdbcType=VARCHAR},
+      </if>
+      <if test="chkBatNo != null">
+        chk_bat_no = #{chkBatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="settleDate != null">
+        settle_date = #{settleDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpSmp != null">
+        tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null">
+        region_id = #{regionId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+    update t_pay_order
+    set user_id = #{userId,jdbcType=VARCHAR},
+      pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+      total_amount = #{totalAmount,jdbcType=BIGINT},
+      actual_pay_amt = #{actualPayAmt,jdbcType=BIGINT},
+      other_pay_amt = #{otherPayAmt,jdbcType=BIGINT},
+      auth_code = #{authCode,jdbcType=VARCHAR},
+      pay_data = #{payData,jdbcType=VARCHAR},
+      pay_image_url = #{payImageUrl,jdbcType=VARCHAR},
+      order_appendix = #{orderAppendix,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      expire_time = #{expireTime,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=VARCHAR},
+      payment_type = #{paymentType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      request_date = #{requestDate,jdbcType=DATE},
+      request_time = #{requestTime,jdbcType=VARCHAR},
+      finish_date = #{finishDate,jdbcType=DATE},
+      finish_time = #{finishTime,jdbcType=VARCHAR},
+      notify_url = #{notifyUrl,jdbcType=VARCHAR},
+      notify_date = #{notifyDate,jdbcType=DATE},
+      notify_time = #{notifyTime,jdbcType=VARCHAR},
+      chk_sts = #{chkSts,jdbcType=VARCHAR},
+      chk_bat_no = #{chkBatNo,jdbcType=VARCHAR},
+      settle_date = #{settleDate,jdbcType=VARCHAR},
+      tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      region_id = #{regionId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPayOrderId">
+    update t_pay_order
+    set user_id = #{userId,jdbcType=VARCHAR},
+    request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+    request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+    total_amount = #{totalAmount,jdbcType=BIGINT},
+    actual_pay_amt = #{actualPayAmt,jdbcType=BIGINT},
+    other_pay_amt = #{otherPayAmt,jdbcType=BIGINT},
+    auth_code = #{authCode,jdbcType=VARCHAR},
+    pay_data = #{payData,jdbcType=VARCHAR},
+    pay_image_url = #{payImageUrl,jdbcType=VARCHAR},
+    order_appendix = #{orderAppendix,jdbcType=VARCHAR},
+    subject = #{subject,jdbcType=VARCHAR},
+    expire_time = #{expireTime,jdbcType=VARCHAR},
+    channel_type = #{channelType,jdbcType=VARCHAR},
+    payment_type = #{paymentType,jdbcType=VARCHAR},
+    status = #{status,jdbcType=VARCHAR},
+    request_date = #{requestDate,jdbcType=DATE},
+    request_time = #{requestTime,jdbcType=VARCHAR},
+    finish_date = #{finishDate,jdbcType=DATE},
+    finish_time = #{finishTime,jdbcType=VARCHAR},
+    notify_url = #{notifyUrl,jdbcType=VARCHAR},
+    notify_date = #{notifyDate,jdbcType=DATE},
+    notify_time = #{notifyTime,jdbcType=VARCHAR},
+    chk_sts = #{chkSts,jdbcType=VARCHAR},
+    chk_bat_no = #{chkBatNo,jdbcType=VARCHAR},
+    settle_date = #{settleDate,jdbcType=VARCHAR},
+    tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+    node_id = #{nodeId,jdbcType=VARCHAR},
+    region_id = #{regionId,jdbcType=VARCHAR}
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR}
+  </update>
+</mapper>

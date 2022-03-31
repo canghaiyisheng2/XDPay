@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.petshome.paymentgateway.mapper.PayTxnJnlMapper">
+  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId" />
+    <result column="request_txn_jnl" jdbcType="VARCHAR" property="requestTxnJnl" />
+    <result column="response_txn_jnl" jdbcType="VARCHAR" property="responseTxnJnl" />
+    <result column="request_order_id" jdbcType="VARCHAR" property="requestOrderId" />
+    <result column="request_order_type" jdbcType="VARCHAR" property="requestOrderType" />
+    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="amount" jdbcType="BIGINT" property="amount" />
+    <result column="txn_type" jdbcType="VARCHAR" property="txnType" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="tmp_smp" jdbcType="VARCHAR" property="tmpSmp" />
+    <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="region_id" jdbcType="VARCHAR" property="regionId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, pay_order_id, request_txn_jnl, response_txn_jnl, request_order_id, request_order_type, 
+    pay_method, number, amount, txn_type, status, tmp_smp, node_id, region_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_pay_txn_jnl
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_pay_txn_jnl
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    insert into t_pay_txn_jnl (id, user_id, pay_order_id, 
+      request_txn_jnl, response_txn_jnl, request_order_id, 
+      request_order_type, pay_method, number, 
+      amount, txn_type, status, 
+      tmp_smp, node_id, region_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{payOrderId,jdbcType=VARCHAR}, 
+      #{requestTxnJnl,jdbcType=VARCHAR}, #{responseTxnJnl,jdbcType=VARCHAR}, #{requestOrderId,jdbcType=VARCHAR}, 
+      #{requestOrderType,jdbcType=VARCHAR}, #{payMethod,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, 
+      #{amount,jdbcType=BIGINT}, #{txnType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{tmpSmp,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{regionId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    insert into t_pay_txn_jnl
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="payOrderId != null">
+        pay_order_id,
+      </if>
+      <if test="requestTxnJnl != null">
+        request_txn_jnl,
+      </if>
+      <if test="responseTxnJnl != null">
+        response_txn_jnl,
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id,
+      </if>
+      <if test="requestOrderType != null">
+        request_order_type,
+      </if>
+      <if test="payMethod != null">
+        pay_method,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="txnType != null">
+        txn_type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="tmpSmp != null">
+        tmp_smp,
+      </if>
+      <if test="nodeId != null">
+        node_id,
+      </if>
+      <if test="regionId != null">
+        region_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null">
+        #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTxnJnl != null">
+        #{requestTxnJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="responseTxnJnl != null">
+        #{responseTxnJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderType != null">
+        #{requestOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null">
+        #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="txnType != null">
+        #{txnType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpSmp != null">
+        #{tmpSmp,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null">
+        #{regionId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    update t_pay_txn_jnl
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="payOrderId != null">
+        pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestTxnJnl != null">
+        request_txn_jnl = #{requestTxnJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="responseTxnJnl != null">
+        response_txn_jnl = #{responseTxnJnl,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderType != null">
+        request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null">
+        pay_method = #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="txnType != null">
+        txn_type = #{txnType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="tmpSmp != null">
+        tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="regionId != null">
+        region_id = #{regionId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    update t_pay_txn_jnl
+    set user_id = #{userId,jdbcType=VARCHAR},
+      pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      request_txn_jnl = #{requestTxnJnl,jdbcType=VARCHAR},
+      response_txn_jnl = #{responseTxnJnl,jdbcType=VARCHAR},
+      request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+      pay_method = #{payMethod,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=BIGINT},
+      txn_type = #{txnType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      region_id = #{regionId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByRequestTxnJnl" parameterType="com.cn.petshome.paymentgateway.po.PayTxnJnlDO">
+    update t_pay_txn_jnl
+      set user_id = #{userId,jdbcType=VARCHAR},
+      pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      response_txn_jnl = #{responseTxnJnl,jdbcType=VARCHAR},
+      request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      request_order_type = #{requestOrderType,jdbcType=VARCHAR},
+      pay_method = #{payMethod,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=BIGINT},
+      txn_type = #{txnType,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      tmp_smp = #{tmpSmp,jdbcType=VARCHAR},
+      node_id = #{nodeId,jdbcType=VARCHAR},
+      region_id = #{regionId,jdbcType=VARCHAR}
+    where request_txn_jnl = #{requestTxnJnl,jdbcType=VARCHAR}
+  </update>
+</mapper>

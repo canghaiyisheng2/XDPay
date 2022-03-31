@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.petshome.paymentgateway.mapper.OrderPayMethodMapper">
+  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId" />
+    <result column="request_order_id" jdbcType="VARCHAR" property="requestOrderId" />
+    <result column="pay_method" jdbcType="VARCHAR" property="payMethod" />
+    <result column="pay_voucher" jdbcType="VARCHAR" property="payVoucher" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="amount" jdbcType="BIGINT" property="amount" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, pay_order_id, request_order_id, pay_method, pay_voucher, number, amount, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_order_pay_method
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByPayOrderId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_order_pay_method
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPayOrderIdAndPayMethod" resultType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_order_pay_method
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR}
+      and pay_method = #{payMethod,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_order_pay_method
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+    insert into t_order_pay_method (id, pay_order_id, request_order_id, 
+      pay_method, pay_voucher, number, 
+      amount, status)
+    values (#{id,jdbcType=BIGINT}, #{payOrderId,jdbcType=VARCHAR}, #{requestOrderId,jdbcType=VARCHAR}, 
+      #{payMethod,jdbcType=VARCHAR}, #{payVoucher,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, 
+      #{amount,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+    insert into t_order_pay_method
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="payOrderId != null">
+        pay_order_id,
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id,
+      </if>
+      <if test="payMethod != null">
+        pay_method,
+      </if>
+      <if test="payVoucher != null">
+        pay_voucher,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="payOrderId != null">
+        #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null">
+        #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="payVoucher != null">
+        #{payVoucher,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch">
+    insert into t_order_pay_method (id, pay_order_id, request_order_id,
+    pay_method, pay_voucher, number,
+    amount, status) values
+    <foreach item="item" collection="list" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.payOrderId,jdbcType=VARCHAR},
+      #{item.requestOrderId,jdbcType=VARCHAR}, #{item.payMethod,jdbcType=VARCHAR},
+      #{item.payVoucher,jdbcType=VARCHAR}, #{item.number,jdbcType=INTEGER},
+      #{item.amount,jdbcType=BIGINT}, #{item.status,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+    update t_order_pay_method
+    <set>
+      <if test="payOrderId != null">
+        pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="requestOrderId != null">
+        request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="payMethod != null">
+        pay_method = #{payMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="payVoucher != null">
+        pay_voucher = #{payVoucher,jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+    update t_order_pay_method
+    set pay_order_id = #{payOrderId,jdbcType=VARCHAR},
+      request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      pay_method = #{payMethod,jdbcType=VARCHAR},
+      pay_voucher = #{payVoucher,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=BIGINT},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPayOrderIdAndPayMethod">
+    update t_order_pay_method
+    set request_order_id = #{requestOrderId,jdbcType=VARCHAR},
+      pay_voucher = #{payVoucher,jdbcType=VARCHAR},
+      number = #{number,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=BIGINT},
+      status = #{status,jdbcType=VARCHAR}
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR} and
+      pay_method = #{payMethod,jdbcType=VARCHAR}
+  </update>
+  <update id="updateCashStatusByPayOrderId">
+    update t_order_pay_method
+    set status = #{status,jdbcType=VARCHAR}
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR} and
+    pay_method = '0'
+  </update>
+</mapper>
