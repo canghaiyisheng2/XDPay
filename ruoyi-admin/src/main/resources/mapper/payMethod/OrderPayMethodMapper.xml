@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payMethod.mapper.OrderPayMethodMapper">
+    
+    <resultMap type="OrderPayMethod" id="OrderPayMethodResult">
+        <result property="id"    column="id"    />
+        <result property="payOrderId"    column="pay_order_id"    />
+        <result property="requestOrderId"    column="request_order_id"    />
+        <result property="payMethod"    column="pay_method"    />
+        <result property="payVoucher"    column="pay_voucher"    />
+        <result property="number"    column="number"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectOrderPayMethodVo">
+        select id, pay_order_id, request_order_id, pay_method, pay_voucher, number, amount, status from t_order_pay_method
+    </sql>
+
+    <select id="selectOrderPayMethodList" parameterType="OrderPayMethod" resultMap="OrderPayMethodResult">
+        <include refid="selectOrderPayMethodVo"/>
+        <where>  
+            <if test="payOrderId != null  and payOrderId != ''"> and pay_order_id = #{payOrderId}</if>
+            <if test="requestOrderId != null  and requestOrderId != ''"> and request_order_id = #{requestOrderId}</if>
+            <if test="payMethod != null  and payMethod != ''"> and pay_method = #{payMethod}</if>
+            <if test="payVoucher != null  and payVoucher != ''"> and pay_voucher = #{payVoucher}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderPayMethodById" parameterType="String" resultMap="OrderPayMethodResult">
+        <include refid="selectOrderPayMethodVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderPayMethod" parameterType="OrderPayMethod" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_pay_method
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="payOrderId != null and payOrderId != ''">pay_order_id,</if>
+            <if test="requestOrderId != null and requestOrderId != ''">request_order_id,</if>
+            <if test="payMethod != null and payMethod != ''">pay_method,</if>
+            <if test="payVoucher != null and payVoucher != ''">pay_voucher,</if>
+            <if test="number != null">number,</if>
+            <if test="amount != null">amount,</if>
+            <if test="status != null and status != ''">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="payOrderId != null and payOrderId != ''">#{payOrderId},</if>
+            <if test="requestOrderId != null and requestOrderId != ''">#{requestOrderId},</if>
+            <if test="payMethod != null and payMethod != ''">#{payMethod},</if>
+            <if test="payVoucher != null and payVoucher != ''">#{payVoucher},</if>
+            <if test="number != null">#{number},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="status != null and status != ''">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderPayMethod" parameterType="OrderPayMethod">
+        update t_order_pay_method
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payOrderId != null and payOrderId != ''">pay_order_id = #{payOrderId},</if>
+            <if test="requestOrderId != null and requestOrderId != ''">request_order_id = #{requestOrderId},</if>
+            <if test="payMethod != null and payMethod != ''">pay_method = #{payMethod},</if>
+            <if test="payVoucher != null and payVoucher != ''">pay_voucher = #{payVoucher},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderPayMethodById" parameterType="String">
+        delete from t_order_pay_method where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderPayMethodByIds" parameterType="String">
+        delete from t_order_pay_method where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

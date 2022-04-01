@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payOrder.mapper.PayOrderMapper">
+    
+    <resultMap type="PayOrder" id="PayOrderResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="payOrderId"    column="pay_order_id"    />
+        <result property="requestOrderId"    column="request_order_id"    />
+        <result property="requestOrderType"    column="request_order_type"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="actualPayAmt"    column="actual_pay_amt"    />
+        <result property="otherPayAmt"    column="other_pay_amt"    />
+        <result property="authCode"    column="auth_code"    />
+        <result property="payData"    column="pay_data"    />
+        <result property="payImageUrl"    column="pay_image_url"    />
+        <result property="orderAppendix"    column="order_appendix"    />
+        <result property="subject"    column="subject"    />
+        <result property="expireTime"    column="expire_time"    />
+        <result property="channelType"    column="channel_type"    />
+        <result property="paymentType"    column="payment_type"    />
+        <result property="status"    column="status"    />
+        <result property="requestDate"    column="request_date"    />
+        <result property="requestTime"    column="request_time"    />
+        <result property="finishDate"    column="finish_date"    />
+        <result property="finishTime"    column="finish_time"    />
+        <result property="notifyUrl"    column="notify_url"    />
+        <result property="notifyDate"    column="notify_date"    />
+        <result property="notifyTime"    column="notify_time"    />
+        <result property="chkSts"    column="chk_sts"    />
+        <result property="chkBatNo"    column="chk_bat_no"    />
+        <result property="settleDate"    column="settle_date"    />
+        <result property="tmpSmp"    column="tmp_smp"    />
+        <result property="nodeId"    column="node_id"    />
+        <result property="regionId"    column="region_id"    />
+    </resultMap>
+
+    <sql id="selectPayOrderVo">
+        select id, user_id, pay_order_id, request_order_id, request_order_type, total_amount, actual_pay_amt, other_pay_amt, auth_code, pay_data, pay_image_url, order_appendix, subject, expire_time, channel_type, payment_type, status, request_date, request_time, finish_date, finish_time, notify_url, notify_date, notify_time, chk_sts, chk_bat_no, settle_date, tmp_smp, node_id, region_id from t_pay_order
+    </sql>
+
+    <select id="selectPayOrderList" parameterType="PayOrder" resultMap="PayOrderResult">
+        <include refid="selectPayOrderVo"/>
+        <where>  
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="payOrderId != null  and payOrderId != ''"> and pay_order_id = #{payOrderId}</if>
+            <if test="requestOrderId != null  and requestOrderId != ''"> and request_order_id = #{requestOrderId}</if>
+            <if test="requestOrderType != null  and requestOrderType != ''"> and request_order_type = #{requestOrderType}</if>
+            <if test="totalAmount != null "> and total_amount = #{totalAmount}</if>
+            <if test="actualPayAmt != null "> and actual_pay_amt = #{actualPayAmt}</if>
+            <if test="otherPayAmt != null "> and other_pay_amt = #{otherPayAmt}</if>
+            <if test="authCode != null  and authCode != ''"> and auth_code = #{authCode}</if>
+            <if test="payData != null  and payData != ''"> and pay_data = #{payData}</if>
+            <if test="payImageUrl != null  and payImageUrl != ''"> and pay_image_url = #{payImageUrl}</if>
+            <if test="orderAppendix != null  and orderAppendix != ''"> and order_appendix = #{orderAppendix}</if>
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="expireTime != null  and expireTime != ''"> and expire_time = #{expireTime}</if>
+            <if test="channelType != null  and channelType != ''"> and channel_type = #{channelType}</if>
+            <if test="paymentType != null  and paymentType != ''"> and payment_type = #{paymentType}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="params.beginRequestDate != null and params.endRequestDate != null and params.beginRequestTime != null and params.beginRequestTime != '' and params.endRequestTime != null and params.endRequestTime != ''">
+                and ((request_date &gt; #{params.beginRequestDate} and request_date &lt; #{params.endRequestDate})
+                or (request_date = #{params.endRequestDate} and request_date = #{params.beginRequestDate} and request_time &lt;= #{params.endRequestTime} and request_time &gt;= #{params.beginRequestTime})
+                or (request_date = #{params.beginRequestDate} and request_date != #{params.endRequestDate} and request_time &gt;= #{params.beginRequestTime})
+                or (request_date = #{params.endRequestDate} and request_date != #{params.beginRequestDate} and request_time &lt;= #{params.endRequestTime}))</if>
+            <if test="finishDate != null "> and finish_date = #{finishDate}</if>
+            <if test="finishTime != null  and finishTime != ''"> and finish_time = #{finishTime}</if>
+            <if test="notifyUrl != null  and notifyUrl != ''"> and notify_url = #{notifyUrl}</if>
+            <if test="notifyDate != null "> and notify_date = #{notifyDate}</if>
+            <if test="notifyTime != null  and notifyTime != ''"> and notify_time = #{notifyTime}</if>
+            <if test="chkSts != null  and chkSts != ''"> and chk_sts = #{chkSts}</if>
+            <if test="chkBatNo != null  and chkBatNo != ''"> and chk_bat_no = #{chkBatNo}</if>
+            <if test="settleDate != null  and settleDate != ''"> and settle_date = #{settleDate}</if>
+            <if test="tmpSmp != null  and tmpSmp != ''"> and tmp_smp = #{tmpSmp}</if>
+            <if test="nodeId != null  and nodeId != ''"> and node_id = #{nodeId}</if>
+            <if test="regionId != null  and regionId != ''"> and region_id = #{regionId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPayOrderById" parameterType="String" resultMap="PayOrderResult">
+        <include refid="selectPayOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getOrderCount" resultType="java.lang.Long">
+        select count(*) from t_pay_order
+    </select>
+
+    <insert id="insertPayOrder" parameterType="PayOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into t_pay_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="payOrderId != null and payOrderId != ''">pay_order_id,</if>
+            <if test="requestOrderId != null and requestOrderId != ''">request_order_id,</if>
+            <if test="requestOrderType != null and requestOrderType != ''">request_order_type,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="actualPayAmt != null">actual_pay_amt,</if>
+            <if test="otherPayAmt != null">other_pay_amt,</if>
+            <if test="authCode != null and authCode != ''">auth_code,</if>
+            <if test="payData != null and payData != ''">pay_data,</if>
+            <if test="payImageUrl != null and payImageUrl != ''">pay_image_url,</if>
+            <if test="orderAppendix != null and orderAppendix != ''">order_appendix,</if>
+            <if test="subject != null and subject != ''">subject,</if>
+            <if test="expireTime != null and expireTime != ''">expire_time,</if>
+            <if test="channelType != null and channelType != ''">channel_type,</if>
+            <if test="paymentType != null and paymentType != ''">payment_type,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="requestDate != null">request_date,</if>
+            <if test="requestTime != null and requestTime != ''">request_time,</if>
+            <if test="finishDate != null">finish_date,</if>
+            <if test="finishTime != null and finishTime != ''">finish_time,</if>
+            <if test="notifyUrl != null and notifyUrl != ''">notify_url,</if>
+            <if test="notifyDate != null">notify_date,</if>
+            <if test="notifyTime != null and notifyTime != ''">notify_time,</if>
+            <if test="chkSts != null and chkSts != ''">chk_sts,</if>
+            <if test="chkBatNo != null and chkBatNo != ''">chk_bat_no,</if>
+            <if test="settleDate != null and settleDate != ''">settle_date,</if>
+            <if test="tmpSmp != null and tmpSmp != ''">tmp_smp,</if>
+            <if test="nodeId != null and nodeId != ''">node_id,</if>
+            <if test="regionId != null and regionId != ''">region_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="payOrderId != null and payOrderId != ''">#{payOrderId},</if>
+            <if test="requestOrderId != null and requestOrderId != ''">#{requestOrderId},</if>
+            <if test="requestOrderType != null and requestOrderType != ''">#{requestOrderType},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="actualPayAmt != null">#{actualPayAmt},</if>
+            <if test="otherPayAmt != null">#{otherPayAmt},</if>
+            <if test="authCode != null and authCode != ''">#{authCode},</if>
+            <if test="payData != null and payData != ''">#{payData},</if>
+            <if test="payImageUrl != null and payImageUrl != ''">#{payImageUrl},</if>
+            <if test="orderAppendix != null and orderAppendix != ''">#{orderAppendix},</if>
+            <if test="subject != null and subject != ''">#{subject},</if>
+            <if test="expireTime != null and expireTime != ''">#{expireTime},</if>
+            <if test="channelType != null and channelType != ''">#{channelType},</if>
+            <if test="paymentType != null and paymentType != ''">#{paymentType},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="requestDate != null">#{requestDate},</if>
+            <if test="requestTime != null and requestTime != ''">#{requestTime},</if>
+            <if test="finishDate != null">#{finishDate},</if>
+            <if test="finishTime != null and finishTime != ''">#{finishTime},</if>
+            <if test="notifyUrl != null and notifyUrl != ''">#{notifyUrl},</if>
+            <if test="notifyDate != null">#{notifyDate},</if>
+            <if test="notifyTime != null and notifyTime != ''">#{notifyTime},</if>
+            <if test="chkSts != null and chkSts != ''">#{chkSts},</if>
+            <if test="chkBatNo != null and chkBatNo != ''">#{chkBatNo},</if>
+            <if test="settleDate != null and settleDate != ''">#{settleDate},</if>
+            <if test="tmpSmp != null and tmpSmp != ''">#{tmpSmp},</if>
+            <if test="nodeId != null and nodeId != ''">#{nodeId},</if>
+            <if test="regionId != null and regionId != ''">#{regionId},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePayOrder" parameterType="PayOrder">
+        update t_pay_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="payOrderId != null and payOrderId != ''">pay_order_id = #{payOrderId},</if>
+            <if test="requestOrderId != null and requestOrderId != ''">request_order_id = #{requestOrderId},</if>
+            <if test="requestOrderType != null and requestOrderType != ''">request_order_type = #{requestOrderType},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="actualPayAmt != null">actual_pay_amt = #{actualPayAmt},</if>
+            <if test="otherPayAmt != null">other_pay_amt = #{otherPayAmt},</if>
+            <if test="authCode != null and authCode != ''">auth_code = #{authCode},</if>
+            <if test="payData != null and payData != ''">pay_data = #{payData},</if>
+            <if test="payImageUrl != null and payImageUrl != ''">pay_image_url = #{payImageUrl},</if>
+            <if test="orderAppendix != null and orderAppendix != ''">order_appendix = #{orderAppendix},</if>
+            <if test="subject != null and subject != ''">subject = #{subject},</if>
+            <if test="expireTime != null and expireTime != ''">expire_time = #{expireTime},</if>
+            <if test="channelType != null and channelType != ''">channel_type = #{channelType},</if>
+            <if test="paymentType != null and paymentType != ''">payment_type = #{paymentType},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="requestDate != null">request_date = #{requestDate},</if>
+            <if test="requestTime != null and requestTime != ''">request_time = #{requestTime},</if>
+            <if test="finishDate != null">finish_date = #{finishDate},</if>
+            <if test="finishTime != null and finishTime != ''">finish_time = #{finishTime},</if>
+            <if test="notifyUrl != null and notifyUrl != ''">notify_url = #{notifyUrl},</if>
+            <if test="notifyDate != null">notify_date = #{notifyDate},</if>
+            <if test="notifyTime != null and notifyTime != ''">notify_time = #{notifyTime},</if>
+            <if test="chkSts != null and chkSts != ''">chk_sts = #{chkSts},</if>
+            <if test="chkBatNo != null and chkBatNo != ''">chk_bat_no = #{chkBatNo},</if>
+            <if test="settleDate != null and settleDate != ''">settle_date = #{settleDate},</if>
+            <if test="tmpSmp != null and tmpSmp != ''">tmp_smp = #{tmpSmp},</if>
+            <if test="nodeId != null and nodeId != ''">node_id = #{nodeId},</if>
+            <if test="regionId != null and regionId != ''">region_id = #{regionId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePayOrderById" parameterType="String">
+        delete from t_pay_order where id = #{id}
+    </delete>
+
+    <delete id="deletePayOrderByIds" parameterType="String">
+        delete from t_pay_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -52,9 +52,9 @@ public class NotifyServiceImpl implements NotifyService {
 
     @Autowired
     private UnionPayService unionPayService;
-//    //微信支付服务
-//    @Autowired
-//    WechatPayService wechatPayService;
+
+    @Autowired
+    private WechatPayService wechatPayService;
 
 
     /**
@@ -74,10 +74,14 @@ public class NotifyServiceImpl implements NotifyService {
         NotifyInfo notifyInfo = null;
         PaymentChannelEnum channelKey = PaymentChannelEnum.getPaymentChannelByCode(channelType);
         if (ObjectUtils.isEmpty(channelKey)){
-            throw new NotifyException("参数错误");
+            throw new NotifyException("非法请求");
         }
         switch (channelKey) {
-//            case PaymentKeyUtil.CHANNEL_TYPE_WEIXINPAY:
+            case CHANNEL_TYPE_WEIXINPAY:{
+                log.info("处理来自微信的异步通知");
+                notifyInfo = wechatPayService.notifyHandle(notifyRequest);
+                break;
+            }
             case CHANNEL_TYPE_ALIPAY: {
                 log.info("处理来自支付宝的异步通知");
                 notifyInfo = aliPayService.notifyHandle(notifyRequest);
@@ -88,6 +92,7 @@ public class NotifyServiceImpl implements NotifyService {
                 notifyInfo = unionPayService.notifyHandle(notifyRequest);
                 break;
             }
+            default: throw new NotifyException("非法请求");
         }
 
         // 查询订单表、支付方式信息表

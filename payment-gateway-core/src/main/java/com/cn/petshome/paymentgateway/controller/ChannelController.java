@@ -54,9 +54,8 @@ public class ChannelController {
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.POST)
     public JsonResponse<String> weixinNotify(HttpServletRequest request) {
-//        return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_WEIXINPAY.getCode());
-        wechatPayService.notifyHandle(request);
-        return null;
+        return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_WEIXINPAY.getCode());
+//        wechatPayService.notifyHandle(request);
     }
 
 

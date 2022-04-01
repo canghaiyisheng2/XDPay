@@ -87,7 +87,8 @@ public class WechatPayServiceImpl implements WechatPayService {
      */
     @Override
     public NotifyInfo notifyHandle(HttpServletRequest request) throws NotifyException {
-        log.info("进入银联异步通知处理方法，入参：{}", request);
+        //TODO：微信异步通知
+        log.info("进入微信异步通知处理方法，入参：{}", request);
 
         Map<String, String> params = RequestUtil.getAllRequestParams(request);
         log.info("接受到异步参数{}", params);

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payOrderCount.mapper.OrderPayCountMapper">
+    
+    <resultMap type="OrderPayCount" id="OrderPayCountResult">
+        <result property="id"    column="id"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="count"    column="count"    />
+    </resultMap>
+
+    <sql id="selectOrderPayCountVo">
+        select id, record_date, record_time, count from t_order_pay_count
+    </sql>
+
+    <select id="selectOrderPayCountList" parameterType="OrderPayCount" resultMap="OrderPayCountResult">
+        <include refid="selectOrderPayCountVo"/>
+        <where>
+            <if test="recordDate != null "> and record_date = #{recordDate}</if>
+            <if test="recordTime != null  and recordTime != ''"> and record_time = #{recordTime}</if>
+            <if test="count != null "> and count = #{count}</if>
+        </where>
+        order by record_time desc
+    </select>
+    
+    <select id="selectOrderPayCountById" parameterType="String" resultMap="OrderPayCountResult">
+        <include refid="selectOrderPayCountVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderPayCount" parameterType="OrderPayCount" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order_pay_count
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="recordDate != null">record_date,</if>
+            <if test="recordTime != null and recordTime != ''">record_time,</if>
+            <if test="count != null">count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="recordDate != null">#{recordDate},</if>
+            <if test="recordTime != null and recordTime != ''">#{recordTime},</if>
+            <if test="count != null">#{count},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderPayCount" parameterType="OrderPayCount">
+        update t_order_pay_count
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordDate != null">record_date = #{recordDate},</if>
+            <if test="recordTime != null and recordTime != ''">record_time = #{recordTime},</if>
+            <if test="count != null">count = #{count},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderPayCountById" parameterType="String">
+        delete from t_order_pay_count where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderPayCountByIds" parameterType="String">
+        delete from t_order_pay_count where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
