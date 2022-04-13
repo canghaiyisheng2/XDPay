@@ -11,7 +11,7 @@ import java.util.Date;
  * @date 2022/2/21 14:40
  */
 @Data
-public class PayOrderDO implements Serializable {
+public class PayOrderPO implements Serializable {
     private Long id;
 
     private String userId;

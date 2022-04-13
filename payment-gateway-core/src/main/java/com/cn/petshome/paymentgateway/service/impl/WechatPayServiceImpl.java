@@ -3,14 +3,15 @@ package com.cn.petshome.paymentgateway.service.impl;
 import com.cn.petshome.paymentgateway.common.config.WechatPayResource;
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
-import com.cn.petshome.paymentgateway.common.response.NotifyInfo;
+import com.cn.petshome.paymentgateway.bo.NotifyInfo;
 import com.cn.petshome.paymentgateway.common.util.RequestUtil;
-import com.cn.petshome.paymentgateway.po.PayOrderDO;
+import com.cn.petshome.paymentgateway.po.PayOrderPO;
 import com.cn.petshome.paymentgateway.service.WechatPayService;
 import com.github.wxpay.sdk.WXPay;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -37,15 +38,14 @@ public class WechatPayServiceImpl implements WechatPayService {
      * @throws PaymentException
      */
     @Override
-    public String goPay(PayOrderDO order) throws PaymentException {
-
+    public String goPay(PayOrderPO order) throws PaymentException {
+        log.info("进入微信下单方法，入参：{}", order);
 
         WXPay wxpay = null;
         try {
             wxpay = new WXPay(wechatPayResource, true, true);
-//            wxpay = new WXPay(weixinPayResource);
         } catch (Exception e) {
-            throw new PaymentException("初始化微信支付异常");
+            log.error("初始化微信支付异常");
         }
 
         Map<String, String> data = new HashMap<String, String>();
@@ -57,10 +57,11 @@ public class WechatPayServiceImpl implements WechatPayService {
         data.put("notify_url", wechatPayResource.getNotifyUrl());
         data.put("trade_type", "NATIVE");
 
+        String returnForm = null;
         try {
             Map<String, String> resp = wxpay.unifiedOrder(data);
             log.info("微信支付返回：{}", resp);
-            return "<img id=\"qrious\">\n" +
+            returnForm = "<img id=\"qrious\">\n" +
                     "<script src=\"https://cdn.bootcss.com/qrious/4.0.2/qrious.js\"></script>\n" +
                     "<script>\n" +
                     " var qr = new QRious({\n" +
@@ -69,10 +70,16 @@ public class WechatPayServiceImpl implements WechatPayService {
                     "});\n" +
                     "</script>\n";
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("微信API调用下单接口失败", e);
         }
 
-        return null;
+        if (StringUtils.hasLength(returnForm)){
+            log.info("微信下单完成，返回：{}", returnForm);
+        }else {
+            log.info("微信下单失败，返回空字符串");
+        }
+
+        return returnForm;
     }
 
 

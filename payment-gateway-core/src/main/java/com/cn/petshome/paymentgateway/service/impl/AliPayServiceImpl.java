@@ -10,13 +10,14 @@ import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
 import com.cn.petshome.paymentgateway.common.config.AliPayResource;
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
-import com.cn.petshome.paymentgateway.common.response.NotifyInfo;
+import com.cn.petshome.paymentgateway.bo.NotifyInfo;
 import com.cn.petshome.paymentgateway.common.util.RequestUtil;
-import com.cn.petshome.paymentgateway.po.PayOrderDO;
+import com.cn.petshome.paymentgateway.po.PayOrderPO;
 import com.cn.petshome.paymentgateway.service.AliPayService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -65,7 +66,7 @@ public class AliPayServiceImpl implements AliPayService {
      * @date 2022/1/16 13:17
      */
     @Override
-    public String goPay(PayOrderDO order) throws PaymentException {
+    public String goPay(PayOrderPO order) throws PaymentException {
         log.info("进入支付宝下单方法，入参：{}", order);
 
         //设置请求参数
@@ -90,13 +91,17 @@ public class AliPayServiceImpl implements AliPayService {
                 log.info("支付宝SDK支付请求调用成功，接收应答：{}", response);
                 alipayForm = response.getBody();
             } else {
-                throw new PaymentException("支付宝支付请求失败");
+                log.error("支付宝支付请求错误：{}", response.getBody());
             }
         }catch (AlipayApiException alipayApiException){
-            throw new PaymentException("支付宝SDK支付请求调用失败", alipayApiException);
+            log.error("支付宝SDK支付请求调用失败", alipayApiException);
         }
 
-        log.info("支付宝下单完成，返回：{}", alipayForm);
+        if (StringUtils.hasLength(alipayForm)){
+            log.info("支付宝下单完成，返回：{}", alipayForm);
+        }else {
+            log.error("支付宝下单失败，返回空字符串");
+        }
         return alipayForm;
 
     }

@@ -1,5 +1,7 @@
 package com.cn.petshome.paymentgateway.po;
 
+import com.cn.xidian.fixedLength.FixedLength;
+import com.cn.xidian.fixedLength.ResolveIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -10,23 +12,33 @@ import java.io.Serializable;
  * @date 2022/2/21 14:40
  */
 @Data
-public class OrderPayMethodDO implements Serializable {
+public class OrderPayMethodPO implements Serializable {
+
+    @ResolveIgnore
     private Long id;
 
+    @ResolveIgnore
     private String payOrderId;
 
+    @ResolveIgnore
     private String requestOrderId;
 
+    @FixedLength(2)
     private String payMethod;
 
+    @FixedLength(20)
     private String payVoucher;
 
+    @FixedLength(9)
     private Integer number;
 
+    @FixedLength(9)
     private Long amount;
 
+    @ResolveIgnore
     private String status;
 
+    @ResolveIgnore
     private static final long serialVersionUID = 1L;
 
     public Long getId() {

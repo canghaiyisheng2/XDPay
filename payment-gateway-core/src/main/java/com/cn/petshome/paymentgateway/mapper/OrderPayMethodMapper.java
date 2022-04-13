@@ -1,6 +1,6 @@
 package com.cn.petshome.paymentgateway.mapper;
 
-import com.cn.petshome.paymentgateway.po.OrderPayMethodDO;
+import com.cn.petshome.paymentgateway.po.OrderPayMethodPO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/2/21 11:30
      */
-    int insert(OrderPayMethodDO record);
+    int insert(OrderPayMethodPO record);
 
     /**
      *
@@ -40,7 +40,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/2/21 11:30
      */
-    int insertSelective(OrderPayMethodDO record);
+    int insertSelective(OrderPayMethodPO record);
 
     /**
      *
@@ -50,7 +50,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/1/20 13:10
      */
-    int insertBatch(List<OrderPayMethodDO> records);
+    int insertBatch(List<OrderPayMethodPO> records);
 
     /**
      *
@@ -60,28 +60,28 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/2/21 11:30
      */
-    OrderPayMethodDO selectByPrimaryKey(Long id);
+    OrderPayMethodPO selectByPrimaryKey(Long id);
 
     /**
      *
      * 根据订单号查询支付方式
      * @param payOrderId 订单号
-     * @return {@link List< OrderPayMethodDO >}
+     * @return {@link List<  OrderPayMethodPO  >}
      * @author hjr
      * @date 2022/1/21 15:10
      */
-    List<OrderPayMethodDO> selectByPayOrderId(String payOrderId);
+    List<OrderPayMethodPO> selectByPayOrderId(String payOrderId);
 
     /**
      *
      * 查询订单支付方式
      * @param payOrderId 订单号
      * @param payMethod 支付方式
-     * @return {@link OrderPayMethodDO} 支付方式
+     * @return {@link OrderPayMethodPO} 支付方式
      * @author hjr
      * @date 2022/1/21 15:08
      */
-    OrderPayMethodDO selectByPayOrderIdAndPayMethod(String payOrderId, String payMethod);
+    OrderPayMethodPO selectByPayOrderIdAndPayMethod(String payOrderId, String payMethod);
 
     /**
      *
@@ -91,7 +91,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/2/21 11:30
      */
-    int updateByPrimaryKeySelective(OrderPayMethodDO record);
+    int updateByPrimaryKeySelective(OrderPayMethodPO record);
 
     /**
      *
@@ -101,7 +101,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/2/21 11:30
      */
-    int updateByPrimaryKey(OrderPayMethodDO record);
+    int updateByPrimaryKey(OrderPayMethodPO record);
 
     /**
      *
@@ -111,7 +111,7 @@ public interface OrderPayMethodMapper {
      * @author hjr
      * @date 2022/1/20 15:32
      */
-    int updateByPayOrderIdAndPayMethod(OrderPayMethodDO record);
+    int updateByPayOrderIdAndPayMethod(OrderPayMethodPO record);
 
     /**
      *

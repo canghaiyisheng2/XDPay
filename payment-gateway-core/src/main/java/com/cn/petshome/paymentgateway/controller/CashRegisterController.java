@@ -1,7 +1,7 @@
 package com.cn.petshome.paymentgateway.controller;
 
 import com.cn.petshome.paymentgateway.common.request.PayOrderRequest;
-import com.cn.petshome.paymentgateway.common.response.JsonResponse;
+import com.cn.petshome.paymentgateway.common.response.ResponseBean;
 import com.cn.petshome.paymentgateway.common.response.PrePlacePayOrderResponse;
 import com.cn.petshome.paymentgateway.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @date 2022/1/18 13:51
  */
 @RestController
-@RequestMapping(value = "/cashRegister", consumes = "application/json", produces = "application/json")
+@RequestMapping(value = "/cashRegister")
 public class CashRegisterController {
 
     @Autowired
@@ -28,8 +28,11 @@ public class CashRegisterController {
      * @author hjr
      * @date 2022/3/10 10:07
      */
-    @RequestMapping(value = "/goPay", method = RequestMethod.POST)
-    public JsonResponse<PrePlacePayOrderResponse> goPay(@RequestBody @Validated PayOrderRequest request){
+    @RequestMapping(value = "/goPay",
+            method = RequestMethod.POST,
+            consumes = {"application/json", "application/xml", "application/fixed-length"},
+            produces = {"application/json", "application/xml", "application/fixed-length"})
+    public ResponseBean<PrePlacePayOrderResponse> goPay(@RequestBody @Validated PayOrderRequest request){
         return paymentService.prePlacePayOrder(request);
     }
 

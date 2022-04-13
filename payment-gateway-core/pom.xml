@@ -131,22 +131,24 @@
             <version>${weixinpay-httpclient.version}</version>
         </dependency>
 
-<!--        &lt;!&ndash; ZXing &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.google.zxing</groupId>-->
-<!--            <artifactId>core</artifactId>-->
-<!--            <version>3.3.3</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.google.zxing</groupId>-->
-<!--            <artifactId>javase</artifactId>-->
-<!--            <version>3.3.3</version>-->
-<!--        </dependency>-->
-
         <!--HttpClient工具模块-->
         <dependency>
             <groupId>com.cn.xidian</groupId>
             <artifactId>pub-httpclient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!--XML报文解析-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
+        <!--定长报文解析-->
+        <dependency>
+            <groupId>com.cn.xidian</groupId>
+            <artifactId>fixed-length-resolver</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

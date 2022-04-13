@@ -1,6 +1,6 @@
 package com.cn.petshome.paymentgateway.mapper;
 
-import com.cn.petshome.paymentgateway.po.PayOrderDO;
+import com.cn.petshome.paymentgateway.po.PayOrderPO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -28,7 +28,7 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int insert(PayOrderDO record);
+    int insert(PayOrderPO record);
 
     /**
      *
@@ -38,7 +38,7 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int insertSelective(PayOrderDO record);
+    int insertSelective(PayOrderPO record);
 
     /**
      *
@@ -48,17 +48,27 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    PayOrderDO selectByPrimaryKey(Long id);
+    PayOrderPO selectByPrimaryKey(Long id);
 
     /**
      *
      * 根据订单号查询订单
      * @param payOrderId 订单号
-     * @return {@link PayOrderDO} 查询到的记录
+     * @return {@link PayOrderPO} 查询到的记录
      * @author hjr
      * @date 2022/1/21 14:02
      */
-    PayOrderDO selectByPayOrderId(String payOrderId);
+    PayOrderPO selectByPayOrderId(String payOrderId);
+
+    /**
+     *
+     * 根据请求订单号查询订单
+     * @param requestOrderId 请求订单号
+     * @return {@link PayOrderPO} 查询到的记录
+     * @author hjr
+     * @date 2022/1/21 14:02
+     */
+    PayOrderPO selectByRequestOrderId(String requestOrderId);
 
     /**
      *
@@ -68,7 +78,7 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int updateByPrimaryKeySelective(PayOrderDO record);
+    int updateByPrimaryKeySelective(PayOrderPO record);
 
 
     /**
@@ -79,7 +89,7 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int updateByPrimaryKey(PayOrderDO record);
+    int updateByPrimaryKey(PayOrderPO record);
 
     /**
      *
@@ -89,5 +99,5 @@ public interface PayOrderMapper {
      * @author hjr
      * @date 2022/1/21 14:37
      */
-    int updateByPayOrderId(PayOrderDO record);
+    int updateByPayOrderId(PayOrderPO record);
 }

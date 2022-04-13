@@ -12,7 +12,10 @@
         <module>payment-gateway-core</module>
         <module>union-pay-sdk</module>
         <module>wxpay-sdk</module>
+        <!--整合httpclient工具包-->
         <module>pub-httpcilent</module>
+        <!--定长报文解析工具包-->
+        <module>fixed-length-resolver</module>
 
         <!--ruoyi框架-->
         <module>ruoyi-admin</module>

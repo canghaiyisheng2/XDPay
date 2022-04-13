@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cn.petshome.paymentgateway.mapper.OrderPayMethodMapper">
-  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId" />
     <result column="request_order_id" jdbcType="VARCHAR" property="requestOrderId" />
@@ -37,7 +37,7 @@
     delete from t_order_pay_method
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     insert into t_order_pay_method (id, pay_order_id, request_order_id, 
       pay_method, pay_voucher, number, 
       amount, status)
@@ -45,7 +45,7 @@
       #{payMethod,jdbcType=VARCHAR}, #{payVoucher,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, 
       #{amount,jdbcType=BIGINT}, #{status,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     insert into t_order_pay_method
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -111,7 +111,7 @@
       #{item.amount,jdbcType=BIGINT}, #{item.status,jdbcType=VARCHAR})
     </foreach>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     update t_order_pay_method
     <set>
       <if test="payOrderId != null">
@@ -138,7 +138,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodDO">
+  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     update t_order_pay_method
     set pay_order_id = #{payOrderId,jdbcType=VARCHAR},
       request_order_id = #{requestOrderId,jdbcType=VARCHAR},

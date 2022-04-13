@@ -1,7 +1,8 @@
 package com.cn.petshome.paymentgateway.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.cn.petshome.paymentgateway.common.response.NotifyInfo;
+import com.cn.petshome.paymentgateway.bo.NotifyInfo;
+import com.cn.petshome.paymentgateway.common.util.CompensationUtil;
 import com.cn.petshome.petspub.httpclient.service.HttpClientService;
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,11 @@ public class NotifyMessageDispatcher implements MessageListenerConcurrently {
                 log.info("接受到消息主体：{}", notifyInfoJson);
                 NotifyInfo notifyInfo = (NotifyInfo) JSON.parse(notifyInfoJson);
 
-                httpClientService.doPost(notifyInfo.getNotifyUrl(), notifyInfo.toMap(), "UTF-8");
+                httpClientService.doPost(
+                        notifyInfo.getNotifyUrl(),
+                        notifyInfo.toMap(),
+                        CompensationUtil.getFutureCallback(notifyInfo, 0),
+                        "UTF-8");
             }
         }catch (UnsupportedEncodingException unsupportedEncodingException){
             throw new NotifyException("获取MQ消息内容异常", unsupportedEncodingException);

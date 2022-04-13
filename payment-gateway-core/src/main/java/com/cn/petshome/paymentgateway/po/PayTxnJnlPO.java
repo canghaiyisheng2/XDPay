@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @date 2022/2/21 14:40
  */
 @Data
-public class PayTxnJnlDO implements Serializable {
+public class PayTxnJnlPO implements Serializable {
     private Long id;
 
     private String userId;

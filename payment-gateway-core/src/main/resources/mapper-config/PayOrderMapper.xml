@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cn.petshome.paymentgateway.mapper.PayOrderMapper">
-  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.PayOrderDO">
+  <resultMap id="BaseResultMap" type="com.cn.petshome.paymentgateway.po.PayOrderPO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="pay_order_id" jdbcType="VARCHAR" property="payOrderId" />
@@ -52,11 +52,18 @@
     from t_pay_order
     where pay_order_id = #{payOrderId,jdbcType=BIGINT}
   </select>
+  <select id="selectByRequestOrderId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_pay_order
+    where request_order_id = #{requestOrderId,jdbcType=BIGINT}
+    limit 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_pay_order
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+  <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.PayOrderPO">
     insert into t_pay_order (id, user_id, pay_order_id,
       request_order_id, request_order_type, total_amount, 
       actual_pay_amt, other_pay_amt, auth_code, 
@@ -80,7 +87,7 @@
       #{tmpSmp,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{regionId,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+  <insert id="insertSelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderPO">
     insert into t_pay_order
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -267,7 +274,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.petshome.paymentgateway.po.PayOrderPO">
     update t_pay_order
     <set>
       <if test="userId != null">
@@ -360,7 +367,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.PayOrderDO">
+  <update id="updateByPrimaryKey" parameterType="com.cn.petshome.paymentgateway.po.PayOrderPO">
     update t_pay_order
     set user_id = #{userId,jdbcType=VARCHAR},
       pay_order_id = #{payOrderId,jdbcType=VARCHAR},

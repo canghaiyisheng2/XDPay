@@ -1,6 +1,6 @@
 package com.cn.petshome.paymentgateway.mapper;
 
-import com.cn.petshome.paymentgateway.po.PayTxnJnlDO;
+import com.cn.petshome.paymentgateway.po.PayTxnJnlPO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -29,7 +29,7 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int insert(PayTxnJnlDO record);
+    int insert(PayTxnJnlPO record);
 
     /**
      *
@@ -39,7 +39,7 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int insertSelective(PayTxnJnlDO record);
+    int insertSelective(PayTxnJnlPO record);
 
     /**
      *
@@ -49,7 +49,7 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    PayTxnJnlDO selectByPrimaryKey(Long id);
+    PayTxnJnlPO selectByPrimaryKey(Long id);
 
     /**
      *
@@ -59,7 +59,7 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int updateByPrimaryKeySelective(PayTxnJnlDO record);
+    int updateByPrimaryKeySelective(PayTxnJnlPO record);
 
     /**
      *
@@ -69,7 +69,7 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/2/21 14:15
      */
-    int updateByPrimaryKey(PayTxnJnlDO record);
+    int updateByPrimaryKey(PayTxnJnlPO record);
 
     /**
      *
@@ -79,5 +79,5 @@ public interface PayTxnJnlMapper {
      * @author hjr
      * @date 2022/1/20 15:09
      */
-    int updateByRequestTxnJnl(PayTxnJnlDO record);
+    int updateByRequestTxnJnl(PayTxnJnlPO record);
 }

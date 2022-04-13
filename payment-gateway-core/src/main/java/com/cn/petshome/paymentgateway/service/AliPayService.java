@@ -2,8 +2,8 @@ package com.cn.petshome.paymentgateway.service;
 
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
-import com.cn.petshome.paymentgateway.common.response.NotifyInfo;
-import com.cn.petshome.paymentgateway.po.PayOrderDO;
+import com.cn.petshome.paymentgateway.bo.NotifyInfo;
+import com.cn.petshome.paymentgateway.po.PayOrderPO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,7 +22,7 @@ public interface AliPayService {
      * @date 2022/1/17 11:17
      * @throws PaymentException
      */
-    public String goPay(PayOrderDO order) throws PaymentException;
+    public String goPay(PayOrderPO order) throws PaymentException;
 
     /**
      *

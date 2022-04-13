@@ -1,4 +1,4 @@
-package com.cn.petshome.paymentgateway.common.response;
+package com.cn.petshome.paymentgateway.bo;
 
 import com.alibaba.fastjson.JSON;
 import io.swagger.models.auth.In;
@@ -14,6 +14,7 @@ import java.util.Map;
  * @date 2022/1/21 16:39
  */
 @Data
+@AllArgsConstructor
 public class NotifyInfo {
 
     public static final String TRADE_SUCCESS = "TRADE_SUCCESS";

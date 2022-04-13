@@ -1,17 +1,18 @@
 package com.cn.petshome.paymentgateway.service.impl;
 
 import com.cn.petshome.paymentgateway.common.config.UnionPayResource;
-import com.cn.petshome.paymentgateway.common.response.NotifyInfo;
+import com.cn.petshome.paymentgateway.bo.NotifyInfo;
 import com.cn.petshome.paymentgateway.common.util.RequestUtil;
 import com.cn.petshome.paymentgateway.sdk.union.AcpService;
 import com.cn.petshome.paymentgateway.service.UnionPayService;
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
 import com.cn.petshome.paymentgateway.sdk.union.SdkConfig;
 import com.cn.petshome.paymentgateway.sdk.union.SdkConstants;
-import com.cn.petshome.paymentgateway.po.PayOrderDO;
+import com.cn.petshome.paymentgateway.po.PayOrderPO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -60,7 +61,7 @@ public class UnionPayServiceImpl implements UnionPayService {
      * @date 2022/1/17 16:08
      */
     @Override
-    public String goPay(PayOrderDO order) {
+    public String goPay(PayOrderPO order) {
         log.info("进入银联下单方法，入参：{}", order);
 
         Map<String, String> requestData = new HashMap<>(20);
@@ -104,7 +105,12 @@ public class UnionPayServiceImpl implements UnionPayService {
         //生成自动跳转的Html表单
         String htmlForm = AcpService.createAutoFormHtml(requestFrontUrl, submitFromData,UnionPayResource.encoding_UTF8);
 
-        log.info("银联下单完成，返回：{}", htmlForm);
+        if (StringUtils.hasLength(htmlForm)){
+            log.info("银联下单完成，返回：{}", htmlForm);
+        }else {
+            log.error("银联下单失败，返回空字符串");
+        }
+
         return htmlForm;
     }
 

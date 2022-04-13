@@ -1,6 +1,6 @@
 package com.cn.petshome.paymentgateway.controller;
 
-import com.cn.petshome.paymentgateway.common.response.JsonResponse;
+import com.cn.petshome.paymentgateway.common.response.ResponseBean;
 import com.cn.petshome.paymentgateway.common.util.PaymentChannelEnum;
 import com.cn.petshome.paymentgateway.service.NotifyService;
 import com.cn.petshome.paymentgateway.service.WechatPayService;
@@ -17,16 +17,16 @@ import javax.servlet.http.HttpServletRequest;
  * @date 2022/2/21 10:43
  */
 @RestController
-@RequestMapping(value = "/notify", produces = "application/json")
+@RequestMapping(value = "/notify")
 public class ChannelController {
     @Autowired
     NotifyService notifyService;
 
     //TODO:仅测试同步响应
     @RequestMapping(value = "/return", method = RequestMethod.POST)
-    public JsonResponse returnPage(HttpServletRequest request) {
+    public ResponseBean returnPage(HttpServletRequest request) {
         //返回前端同步返回页面
-        return JsonResponse.buildSuccess(request.getParameterMap());
+        return ResponseBean.buildSuccess(request.getParameterMap());
     }
 
     /**
@@ -38,7 +38,7 @@ public class ChannelController {
      * @date 2022/3/10 10:17
      */
     @RequestMapping(value = "/alipay", method = RequestMethod.POST)
-    public JsonResponse<String> alipayNotify(HttpServletRequest request) {
+    public ResponseBean<String> alipayNotify(HttpServletRequest request) {
         return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_ALIPAY.getCode());
     }
 
@@ -53,7 +53,7 @@ public class ChannelController {
      * @date 2022/3/10 10:17
      */
     @RequestMapping(value = "/weixin", method = RequestMethod.POST)
-    public JsonResponse<String> weixinNotify(HttpServletRequest request) {
+    public ResponseBean<String> weixinNotify(HttpServletRequest request) {
         return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_WEIXINPAY.getCode());
 //        wechatPayService.notifyHandle(request);
     }
@@ -68,7 +68,7 @@ public class ChannelController {
      * @date 2022/3/10 10:17
      */
     @RequestMapping(value = "/unionpay", method = RequestMethod.POST)
-    public JsonResponse<String> unionpayNotify(HttpServletRequest request) {
+    public ResponseBean<String> unionpayNotify(HttpServletRequest request) {
         return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_UNIONPAY.getCode());
     }
 }

@@ -57,16 +57,6 @@
                     placeholder="请输入订单标题"
                 />
             </el-form-item>
-            <el-form-item label="支付类型" prop="paymentType">
-                <el-select v-model="payOrder.paymentType" placeholder="请选择支付类型" clearable>
-                    <el-option
-                        v-for="dict in dict.type.payment_type"
-                        :key="dict.value"
-                        :label="dict.label"
-                        :value="dict.value"
-                    />
-                </el-select>
-            </el-form-item>
             <el-form-item label="支付方式">
                 <el-checkbox-group v-model="checkedMethods">
                 <el-checkbox label="0" checked disabled>现金方式</el-checkbox>
