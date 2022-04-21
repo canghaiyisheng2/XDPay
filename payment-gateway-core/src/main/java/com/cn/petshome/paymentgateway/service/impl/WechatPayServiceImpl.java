@@ -94,11 +94,11 @@ public class WechatPayServiceImpl implements WechatPayService {
      */
     @Override
     public NotifyInfo notifyHandle(HttpServletRequest request) throws NotifyException {
-        //TODO：微信异步通知
         log.info("进入微信异步通知处理方法，入参：{}", request);
 
         Map<String, String> params = RequestUtil.getAllRequestParams(request);
+        //验签、转换为同一异步消息
         log.info("接受到异步参数{}", params);
-        return null;
+        return new NotifyInfo(params.get("orderId"), NotifyInfo.TRADE_SUCCESS);
     }
 }

@@ -1,6 +1,8 @@
 package com.cn.petshome.paymentgateway.bo;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +19,9 @@ import java.util.Map;
 @AllArgsConstructor
 public class NotifyInfo {
 
+    @JSONField(serialize = false)
     public static final String TRADE_SUCCESS = "TRADE_SUCCESS";
+    @JSONField(serialize = false)
     public static final String TRADE_FAIL = "TRADE_FAIL";
 
     String payOrderId;

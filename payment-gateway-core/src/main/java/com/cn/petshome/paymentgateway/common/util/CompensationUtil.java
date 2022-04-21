@@ -25,10 +25,8 @@ public class CompensationUtil {
             32000, 64000, 128000, 256000, 512000, 1024000,
             2048000, 4096000, 8192000};
 
-    public static FutureCallback<HttpResponse> getFutureCallback(NotifyInfo notifyInfo, int delayLevel){
+    public static FutureCallback<HttpResponse> getFutureCallback(CompensationService compensationService, NotifyInfo notifyInfo, int delayLevel){
         return new FutureCallback<HttpResponse>() {
-            @Autowired
-            CompensationService compensationService;
 
             @Override
             public void completed(HttpResponse result) {
@@ -39,16 +37,22 @@ public class CompensationUtil {
                         String resultContent = EntityUtils.toString(result.getEntity(), "UTF-8");
                         log.info("请求返回内容：{}", resultContent);
                     } else {
-                        throw new HttpClientException("状态码信息：" + result.getStatusLine().getStatusCode());
+                        log.error("状态码信息：" + result.getStatusLine().getStatusCode());
+                        if (delayLevel < CompensationUtil.DELAY_LEVEL_LIST.length){
+                            compensationService.put(new DelayNotifyElement<NotifyInfo>(delayLevel, notifyInfo));
+                        }
                     }
                 } catch (IOException ioException) {
-                    throw new HttpClientException("返回结果解析失败", ioException);
+                    log.error("返回结果解析失败", ioException);
+                    if (delayLevel < CompensationUtil.DELAY_LEVEL_LIST.length){
+                        compensationService.put(new DelayNotifyElement<NotifyInfo>(delayLevel, notifyInfo));
+                    }
                 }
             }
 
             @Override
             public void failed(Exception ex) {
-                log.info("异步请求失败", ex);
+                log.error("异步请求失败", ex);
                 if (delayLevel < CompensationUtil.DELAY_LEVEL_LIST.length){
                     compensationService.put(new DelayNotifyElement<NotifyInfo>(delayLevel, notifyInfo));
                 }
@@ -56,7 +60,7 @@ public class CompensationUtil {
 
             @Override
             public void cancelled() {
-                log.info("异步请求取消");
+                log.error("异步请求取消");
             }
         };
     }

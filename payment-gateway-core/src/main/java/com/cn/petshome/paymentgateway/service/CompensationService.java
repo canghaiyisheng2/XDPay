@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
  * 补偿机制服务接口
  * @date 2022/4/5 13:25
  */
-@Service
 public interface CompensationService {
 
     /**

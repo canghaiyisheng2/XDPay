@@ -37,6 +37,10 @@
     delete from t_order_pay_method
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByPayOrderId" parameterType="java.lang.String">
+    delete from t_order_pay_method
+    where pay_order_id = #{payOrderId,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="com.cn.petshome.paymentgateway.po.OrderPayMethodPO">
     insert into t_order_pay_method (id, pay_order_id, request_order_id, 
       pay_method, pay_voucher, number, 

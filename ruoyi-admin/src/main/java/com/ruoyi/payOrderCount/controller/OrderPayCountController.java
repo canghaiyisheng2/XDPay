@@ -37,7 +37,6 @@ public class OrderPayCountController extends BaseController
     /**
      * 查询订单请求数记录列表
      */
-    @PreAuthorize("@ss.hasPermi('payOrderCount:payOrderCount:list')")
     @GetMapping("/list")
     public TableDataInfo list(OrderPayCount orderPayCount)
     {
@@ -45,6 +44,7 @@ public class OrderPayCountController extends BaseController
         List<OrderPayCount> list = orderPayCountService.selectOrderPayCountList(orderPayCount);
         return getDataTable(list);
     }
+
 
     /**
      * 导出订单请求数记录列表

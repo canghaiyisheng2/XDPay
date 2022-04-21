@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  *
- * 服务启动
+ * 支付网关服务启动
  */
 @SpringBootApplication(scanBasePackages = {"com.cn.petshome.paymentgateway", "com.cn.petshome.petspub.httpclient"})
 public class Application {

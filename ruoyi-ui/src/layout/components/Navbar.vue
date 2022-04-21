@@ -7,8 +7,6 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
-        
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -18,10 +16,6 @@
         </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
       </template>
 
@@ -34,9 +28,6 @@
           <router-link to="/user/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <el-dropdown-item @click.native="setting = true">
-            <span>布局设置</span>
-          </el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
             <span>退出登录</span>
           </el-dropdown-item>
@@ -54,8 +45,8 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
-import RuoYiGit from '@/components/RuoYi/Git'
-import RuoYiDoc from '@/components/RuoYi/Doc'
+import RuoYiGit from '@/components/XDPay/Git'
+import RuoYiDoc from '@/components/XDPay/Doc'
 
 export default {
   components: {
@@ -91,6 +82,12 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      path:"ws://127.0.0.1:8081/notifySocket/1",
+      socket:""
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -105,7 +102,60 @@ export default {
           location.href = '/index';
         })
       }).catch(() => {});
+    },
+    //websocket初始化
+    init() {
+      if(typeof(WebSocket) === "undefined"){
+          alert("您的浏览器不支持socket")
+      }else{
+          // 实例化socket
+          this.socket = new WebSocket(this.path)
+          // 监听socket连接
+          this.socket.onopen = this.open
+          // 监听socket错误信息
+          this.socket.onerror = this.error
+          // 监听socket消息
+          this.socket.onmessage = this.getMessage
+      }
+    },
+    open: function () {
+        console.log("socket连接成功")
+    },
+    error: function () {
+        console.log("连接错误")
+    },
+    getMessage: function (msg) {
+      let dataObj = JSON.parse(msg.data)
+      let statusText = ""
+      console.log(dataObj)
+      if(dataObj.status === "TRADE_FAIL"){
+        statusText = "失败，请检查订单或联系管理员"
+      }else if(dataObj.status === "TRADE_SUCCESS"){
+        statusText = "成功！"
+      }else{
+        statusText = "异常，请联系管理员"
+      }
+      this.$message({
+        message: '订单' + dataObj.payOrderId + '支付' + statusText,
+        type: 'success',
+        duration: 0,
+        showClose: true
+      });
+    },
+    send: function () {
+        this.socket.send(params)
+    },
+    close: function () {
+        console.log("socket已经关闭")
     }
+  },
+  mounted () {
+    // 初始化
+   this.init()
+  },
+  destroyed(){
+    // 销毁监听
+    this.socket.onclose = this.close
   }
 }
 </script>

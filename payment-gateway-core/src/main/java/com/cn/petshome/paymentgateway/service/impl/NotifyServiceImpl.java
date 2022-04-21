@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,6 +114,7 @@ public class NotifyServiceImpl implements NotifyService {
         notifyInfo.setNotifyUrl(order.getNotifyUrl());
         updateOrderAndMethodsByNotifyInfo(order, methodList, notifyInfo);
         //发送异步通知
+        log.info("发送异步通知：{}", notifyInfo);
         rocketmqProducerService.sendMessage("NotifyMessage", "notify", notifyInfo.toJson());
 
         ResponseBean<String> response = ResponseBean.buildSuccess("");
@@ -134,6 +137,8 @@ public class NotifyServiceImpl implements NotifyService {
         String status = isSuccess ? StatusEnum.PAY_ORDER_STATUS_PAID.getCode()
                 : StatusEnum.PAY_ORDER_STATUS_PLACED.getCode();
         order.setStatus(status);
+        order.setNotifyDate(new Date());
+        order.setNotifyTime(new SimpleDateFormat("HH:mm:ss").format(new Date()));
         try {
             log.info("更新订单表：{}", order);
             payOrderMapper.updateByPayOrderId(order);
@@ -172,10 +177,11 @@ public class NotifyServiceImpl implements NotifyService {
      * @date 2022/4/12 11:05
      */
     private void callUnfrozen(PayOrderPO order, OrderPayMethodPO method, boolean isDraw){
-        boolean isPoint = PaymentKeyEnum.PAY_METHOD_POINT.getKeyCode().equals(method.getPayMethod());
-        boolean isCoupon = PaymentKeyEnum.PAY_METHOD_COUPON.getKeyCode().equals(method.getPayMethod());
+        log.info("进入解冻方法，入参：{}，{}，{}",order, method, isDraw);
         if (!ObjectUtils.isEmpty(method) &&
                 StatusEnum.PAY_METHOD_STATUS_FROZEN.getCode().equals(method.getStatus())){
+            boolean isPoint = PaymentKeyEnum.PAY_METHOD_POINT.getKeyCode().equals(method.getPayMethod());
+            boolean isCoupon = PaymentKeyEnum.PAY_METHOD_COUPON.getKeyCode().equals(method.getPayMethod());
             boolean isUnfrozen = false;
             if (isPoint){
                 isUnfrozen = isDraw?

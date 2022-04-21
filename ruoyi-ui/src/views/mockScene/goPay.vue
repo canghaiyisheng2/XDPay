@@ -101,7 +101,7 @@ export default {
                 "notifyUrl": "",
                 "orderAppendix": "",
                 "subject": "",
-                "paymentType":"",
+                "paymentType":"默认类型",
                 "payMethods": [{
                     "payMethod": 0,
                     "number": 1,
@@ -130,28 +130,19 @@ export default {
     watch: {
         cashAmount(val){
             this.payOrder.payMethods[0].amount =val;
-            console.log(this.payOrder.payMethods)
         }
     },
     methods: {
         //发起支付
         goPay(){
            let _this = this;
-           // axios({
-           //     method: 'post',
-            //    url: process.env.VUE_APP_BASE_API + '/gateway/cashRegister/goPay',
-            //    data: _this.payOrder
-           // }).then(res => {
-           //     let win = window.open();
-           //     win.document.write(res.data.data.returnForm);
-           // });
-          request({
+            request({
                       url: '/cashRegister/goPay',
                       method: 'post',
                       data: _this.payOrder
                     }).then(res => {
-                                      let win = window.open();
-                                      win.document.write(res.data.returnForm);
+                                        let win = window.open()
+                                        win.document.write(res.data.returnForm);
                                   });
         },
         //点击复选框

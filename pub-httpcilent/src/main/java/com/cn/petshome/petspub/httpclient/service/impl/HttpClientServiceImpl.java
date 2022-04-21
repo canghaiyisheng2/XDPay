@@ -69,7 +69,12 @@ public class HttpClientServiceImpl implements HttpClientService {
         log.info("HttpClient启动成功");
 
         // 定义请求类型
-        HttpPost httpPost = new HttpPost(url);
+        HttpPost httpPost = null;
+        try {
+            httpPost = new HttpPost(url);
+        }catch (IllegalArgumentException illegalArgumentException){
+            throw new HttpClientException("非法的URL格式", illegalArgumentException);
+        }
 
         // 判断字符集是否为null
         if (StringUtils.isEmpty(charset)) {
@@ -94,56 +99,10 @@ public class HttpClientServiceImpl implements HttpClientService {
         }
 
         // 发送异步请求
-        httpClient.execute(httpPost, futureCallback);
         try {
-            log.info("关闭");
-            httpClient.close();
-        } catch (IOException ioException) {
-            throw new HttpClientException("HttpClient关闭失败", ioException);
-        }
-    }
-
-    @Override
-    public void doJsonPost(String url, String jsonString, String charset) {
-        doJsonPost(url, jsonString, getDefaultFutureCallback(charset), charset);
-    }
-
-    @Override
-    public void doJsonPost(String url, String jsonString, FutureCallback<HttpResponse> futureCallback, String charset) {
-        log.info("正在启动HttpClient……");
-        httpClient.start();
-        log.info("HttpClient启动成功");
-
-        // 定义请求类型
-        HttpPost httpPost = new HttpPost(url);
-
-        // 判断字符集是否为null
-        if (StringUtils.isEmpty(charset)) {
-            charset = "UTF-8";
-        }
-
-        // 是否传递参数
-        if (!StringUtils.isEmpty(jsonString)) {
-
-            // 模拟表单提交
-            try {
-                httpPost.setHeader("Content-Type", "application/json;charset=UTF-8");
-                StringEntity stringEntity = new StringEntity(jsonString);
-                stringEntity.setContentEncoding(charset);
-                stringEntity.setContentType("application/json");
-                httpPost.setEntity(stringEntity);
-            } catch (UnsupportedEncodingException unsupportedEncodingException) {
-                throw new HttpClientException("不支持的编码格式", unsupportedEncodingException);
-            }
-        }
-
-        // 发送异步请求
-        httpClient.execute(httpPost, futureCallback);
-        try {
-            log.info("关闭");
-            httpClient.close();
-        } catch (IOException ioException) {
-            throw new HttpClientException("HttpClient关闭失败", ioException);
+            httpClient.execute(httpPost, futureCallback);
+        }catch (Exception e){
+            throw new HttpClientException("请求异常", e);
         }
     }
 
@@ -166,21 +125,40 @@ public class HttpClientServiceImpl implements HttpClientService {
                         String resultContent = EntityUtils.toString(result.getEntity(), charset);
                         log.info("请求返回内容：{}", resultContent);
                     } else {
-                        throw new HttpClientException("状态码信息：" + result.getStatusLine().getStatusCode());
+                        log.error("状态码信息：" + result.getStatusLine().getStatusCode());
                     }
                 } catch (IOException ioException) {
-                    throw new HttpClientException("返回结果解析失败", ioException);
+                    log.error("返回结果解析失败", ioException);
+                }
+
+                try {
+                    log.info("关闭");
+                    httpClient.close();
+                } catch (IOException ioException) {
+                    throw new HttpClientException("HttpClient关闭失败, 请求发送失败", ioException);
                 }
             }
 
             @Override
             public void failed(Exception ex) {
-                throw new HttpClientException("请求发送失败", ex);
+                try {
+                    log.info("关闭httpclient");
+                    httpClient.close();
+                } catch (IOException ioException) {
+                    log.error("HttpClient关闭失败, 请求发送失败", ioException);
+                }
+                log.error("请求发送失败", ex);
             }
 
             @Override
             public void cancelled() {
-                log.info("异步请求取消");
+                try {
+                    log.info("关闭httpclient");
+                    httpClient.close();
+                } catch (IOException ioException) {
+                    log.error("HttpClient关闭失败, 异步请求取消", ioException);
+                }
+                log.error("异步请求取消");
             }
         };
     }

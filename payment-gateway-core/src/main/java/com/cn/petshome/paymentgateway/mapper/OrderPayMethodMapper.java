@@ -24,6 +24,16 @@ public interface OrderPayMethodMapper {
 
     /**
      *
+     * 根据id删除记录
+     * @param payOrderId 订单号
+     * @return 删除数
+     * @author hjr
+     * @date 2022/2/21 11:30
+     */
+    int deleteByPayOrderId(String payOrderId);
+
+    /**
+     *
      * 插入单条记录
      * @param record 支付方式记录
      * @return 插入数

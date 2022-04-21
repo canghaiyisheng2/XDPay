@@ -35,6 +35,8 @@ public class CompensationServiceImpl implements CommandLineRunner, CompensationS
 
     @Autowired
     HttpClientService httpClientService;
+    @Autowired
+    private CompensationService compensationService;
 
     private final DelayQueue<DelayNotifyElement<NotifyInfo>> notifyElementDelayQueue
             = new DelayQueue<>();
@@ -73,9 +75,6 @@ public class CompensationServiceImpl implements CommandLineRunner, CompensationS
 
     private class CompensationThread implements Runnable{
 
-        @Autowired
-        private CompensationService compensationService;
-
         public CompensationThread(){
             log.info("异步补偿机制实现线程启动成功");
         }
@@ -88,11 +87,12 @@ public class CompensationServiceImpl implements CommandLineRunner, CompensationS
                             notifyElementDelayQueue.take();
                     NotifyInfo notifyInfo = notifyElement.getData();
                     int delayLevel = notifyElement.getDelayLevel();
+                    log.info("补偿重发中，延时等级：{}...", delayLevel);
 
                     httpClientService.doPost(
                             notifyInfo.getNotifyUrl(),
                             notifyInfo.toMap(),
-                            CompensationUtil.getFutureCallback(notifyInfo, delayLevel + 1),
+                            CompensationUtil.getFutureCallback(compensationService, notifyInfo, delayLevel + 1),
                             "UTF-8");
                 } catch (InterruptedException e) {
                     break;

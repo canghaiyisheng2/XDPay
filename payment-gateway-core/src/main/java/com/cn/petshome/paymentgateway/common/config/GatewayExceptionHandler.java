@@ -50,8 +50,6 @@ public class GatewayExceptionHandler {
     @ExceptionHandler(value = {NotifyException.class})
     public ResponseBean<String> handlerNotifyException(NotifyException notifyException){
         log.error("异步通知异常", notifyException);
-        //异步通知处理失败，需要补偿措施
-
         return ResponseBean.buildError("系统内部错误");
     }
 

@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -79,12 +82,24 @@ public class PaymentServiceImpl implements PaymentService {
         }catch (DataAccessException dataAccessException){
             throw new DaoException("查询订单表失败", dataAccessException);
         }
-        if (!ObjectUtils.isEmpty(order) &&
-                StatusEnum.PAY_ORDER_STATUS_PAID.getCode().equals(order.getStatus())){
-            throw new PaymentException("订单已完成，请重新核查请求表单");
-        }
 
-        // 校验参数合法性（判断支付方式金额之和是否等于总金额、支付渠道合法性）
+        // 校验参数合法性
+        if (!ObjectUtils.isEmpty(order)){
+            if (!request.getUserId().equals(order.getUserId())){
+                throw new PaymentException("当前订单非本人操作，请重新核实订单");
+            }
+            if (StatusEnum.PAY_ORDER_STATUS_PAID.getCode().equals(order.getStatus())){
+                throw new PaymentException("订单已完成，请重新核查请求表单");
+            }
+            //检查订单是否过期
+            boolean isExpire = true;
+            isExpire = (new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis())
+                    .compareTo(order.getExpireTime()) > 0);
+            if (isExpire){
+                throw new PaymentException("订单已过期，请重新下单");
+            }
+        }
+        // 判断支付方式金额之和是否等于总金额、支付渠道合法性
         PaymentChannelEnum channelKey = PaymentChannelEnum.getPaymentChannelByCode(request.getChannelType());
         boolean isValid = PayOrderRequestUtil.requestExamine(request)
                 && !ObjectUtils.isEmpty(channelKey);
@@ -99,7 +114,12 @@ public class PaymentServiceImpl implements PaymentService {
             order = PayOrderRequestUtil.initAndGetPayOrder(request, payOrderId);
         }else {
             log.info("订单{}已存在，重新对其进行下单", order);
-            PayOrderRequestUtil.initAndGetPayOrder(request, order.getPayOrderId());
+            //更新订单部分信息
+            PayOrderPO requestOrder = PayOrderRequestUtil.initAndGetPayOrder(request, order.getPayOrderId());
+            order.setActualPayAmt(requestOrder.getActualPayAmt());
+            order.setChannelType(requestOrder.getChannelType());
+            order.setOtherPayAmt(requestOrder.getOtherPayAmt());
+            order.setTotalAmount(requestOrder.getTotalAmount());
         }
         List<OrderPayMethodPO> payMethods = PayOrderRequestUtil.getMethods(request);
 
@@ -164,13 +184,27 @@ public class PaymentServiceImpl implements PaymentService {
             } catch (DataAccessException dataAccessException) {
                 throw new DaoException("订单表插入失败", dataAccessException);
             }
+        }else {
+            try {
+                log.info("更新支付订单表：{}", order);
+                payOrderMapper.updateByPayOrderId(order);
+            } catch (DataAccessException dataAccessException) {
+                throw new DaoException("订单表更新失败", dataAccessException);
+            }
 
             try {
-                log.info("登记支付方式表：{}", payMethods);
-                orderPayMethodMapper.insertBatch(payMethods);
+                log.info("删除过去下单的支付方式表");
+                int count = orderPayMethodMapper.deleteByPayOrderId(order.getPayOrderId());
+                log.info("删除条目：{}", count);
             }catch (DataAccessException dataAccessException){
-                throw new DaoException("支付方式表插入失败", dataAccessException);
+                throw new DaoException("支付方式表删除失败", dataAccessException);
             }
+        }
+        try {
+            log.info("登记支付方式表：{}", payMethods);
+            orderPayMethodMapper.insertBatch(payMethods);
+        }catch (DataAccessException dataAccessException){
+            throw new DaoException("支付方式表插入失败", dataAccessException);
         }
 
         // 处理积分流
@@ -406,6 +440,17 @@ public class PaymentServiceImpl implements PaymentService {
             rocketmqProducerService.sendMessage("NotifyMessage", "notify", notifyInfo.toJson());
         }
 
+        //更新订单
+        order.setFinishDate(new Date());
+        order.setFinishTime(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+        order.setStatus(StatusEnum.PAY_ORDER_STATUS_PLACED.getCode());
+        try {
+            log.info("更新支付订单表：{}", cashPayTxnJnlPO);
+            payOrderMapper.updateByPayOrderId(order);
+        }catch (DataAccessException dataAccessException){
+            throw new DaoException("支付订单更新失败", dataAccessException);
+        }
+
         log.info("选择支付渠道并下单完成，返回支付表单：{}", returnForm);
         return returnForm;
     }
@@ -419,11 +464,12 @@ public class PaymentServiceImpl implements PaymentService {
      * @date 2022/4/12 11:05
      */
     public void callUnfrozen(PayOrderPO order, OrderPayMethodPO method){
-        boolean isPoint = PaymentKeyEnum.PAY_METHOD_POINT.getKeyCode().equals(method.getPayMethod());
-        boolean isCoupon = PaymentKeyEnum.PAY_METHOD_COUPON.getKeyCode().equals(method.getPayMethod());
+        log.info("进入解冻方法，入参：{}，{}",order, method);
         if (ObjectUtils.isEmpty(method) &&
                 StringUtils.hasLength(method.getPayVoucher()) &&
                 StatusEnum.PAY_METHOD_STATUS_FROZEN.getCode().equals(method.getStatus())) {
+            boolean isPoint = PaymentKeyEnum.PAY_METHOD_POINT.getKeyCode().equals(method.getPayMethod());
+            boolean isCoupon = PaymentKeyEnum.PAY_METHOD_COUPON.getKeyCode().equals(method.getPayMethod());
             boolean isUnFrozen = false;
             if (isPoint){
                 isUnFrozen = externalService.callPointUnFrozen(order.getUserId(),

@@ -22,13 +22,6 @@ public class ChannelController {
     @Autowired
     NotifyService notifyService;
 
-    //TODO:仅测试同步响应
-    @RequestMapping(value = "/return", method = RequestMethod.POST)
-    public ResponseBean returnPage(HttpServletRequest request) {
-        //返回前端同步返回页面
-        return ResponseBean.buildSuccess(request.getParameterMap());
-    }
-
     /**
      *
      * 处理支付宝渠道异步通知
@@ -42,8 +35,6 @@ public class ChannelController {
         return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_ALIPAY.getCode());
     }
 
-    @Autowired
-    WechatPayService wechatPayService;
     /**
      *
      * 处理微信支付渠道异步通知
@@ -55,7 +46,6 @@ public class ChannelController {
     @RequestMapping(value = "/weixin", method = RequestMethod.POST)
     public ResponseBean<String> weixinNotify(HttpServletRequest request) {
         return notifyService.receivePayResultNotify(request, PaymentChannelEnum.CHANNEL_TYPE_WEIXINPAY.getCode());
-//        wechatPayService.notifyHandle(request);
     }
 
 

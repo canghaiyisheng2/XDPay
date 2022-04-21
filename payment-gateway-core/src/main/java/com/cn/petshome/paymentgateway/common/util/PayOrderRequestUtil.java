@@ -5,9 +5,11 @@ import com.cn.petshome.paymentgateway.po.OrderPayMethodPO;
 import com.cn.petshome.paymentgateway.po.PayOrderPO;
 import com.cn.petshome.paymentgateway.po.PayTxnJnlPO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -100,13 +102,15 @@ public class PayOrderRequestUtil {
         initOrder.setNodeId("");
         initOrder.setRegionId("");
 
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         Date requestDate = new Date();
         initOrder.setRequestDate(requestDate);
-        initOrder.setRequestTime(timeFormat.format(requestDate));
-        initOrder.setTmpSmp(new SimpleDateFormat("yyyyMMddHHmmss").format(requestDate));
+        initOrder.setRequestTime(new SimpleDateFormat("HH:mm:ss")
+                .format(requestDate));
+        initOrder.setTmpSmp(new SimpleDateFormat("yyyyMMddHHmmss")
+                .format(requestDate));
 
-        String expireTime = timeFormat.format(new Date(requestDate.getTime() + EXPIRE_LIMIT));
+        String expireTime = new SimpleDateFormat("yyyyMMddHHmmss")
+                .format(new Date(requestDate.getTime() + EXPIRE_LIMIT));
         initOrder.setExpireTime(expireTime);
 
         log.info("初始化订单方法正常返回：{}", initOrder);
@@ -174,18 +178,20 @@ public class PayOrderRequestUtil {
     public static OrderPayMethodPO getOrderPayMethod(List<OrderPayMethodPO> methodList, String payMethodType){
        log.info("进入获取对应支付方式方法：{}, {}", methodList, payMethodType);
 
-        Object[] filterResult = methodList.stream()
-                .filter(method -> payMethodType.equals(method.getPayMethod()))
-                .filter(method -> method.getNumber() > 0 ||
-                        PaymentKeyEnum.PAY_METHOD_CASH.getKeyCode().equals(payMethodType))
-                .filter(method -> method.getAmount() > 0)
-                .toArray();
-        OrderPayMethodPO method = null;
-        if (filterResult.length > 0) {
-            method = (OrderPayMethodPO) filterResult[0];
+        OrderPayMethodPO resMethod = null;
+        if (!CollectionUtils.isEmpty(methodList)){
+            Object[] filterResult = methodList.stream()
+                    .filter(method -> payMethodType.equals(method.getPayMethod()))
+                    .filter(method -> method.getNumber() > 0 ||
+                            PaymentKeyEnum.PAY_METHOD_CASH.getKeyCode().equals(payMethodType))
+                    .filter(method -> method.getAmount() > 0)
+                    .toArray();
+            if (filterResult.length > 0) {
+                resMethod = (OrderPayMethodPO) filterResult[0];
+            }
         }
 
-        log.info("获取对应类型支付方式：{}", method);
-        return method;
+        log.info("获取对应类型支付方式：{}", resMethod);
+        return resMethod;
     }
 }

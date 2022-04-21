@@ -78,7 +78,7 @@ public class UnionPayServiceImpl implements UnionPayService {
         //业务类型，B2C网关支付，手机wap支付
         requestData.put(BIZ_TYPE, "000201");
         //渠道类型，这个字段区分B2C网关支付和手机wap支付；07：PC,平板 08：手机
-        requestData.put(CHANNEL_TYPE, "08");
+        requestData.put(CHANNEL_TYPE, "07");
         //商户号码，请改成自己申请的正式商户号或者open上注册得来的777测试商户号
         requestData.put(MER_ID, unionPayResource.getMerchantId());
         //接入类型，0：直连商户

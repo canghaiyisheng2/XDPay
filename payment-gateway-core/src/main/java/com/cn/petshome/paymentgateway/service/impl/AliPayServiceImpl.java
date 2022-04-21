@@ -5,7 +5,9 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
 import com.cn.petshome.paymentgateway.common.config.AliPayResource;
@@ -70,7 +72,8 @@ public class AliPayServiceImpl implements AliPayService {
         log.info("进入支付宝下单方法，入参：{}", order);
 
         //设置请求参数
-        AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
+//        AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
+        AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setReturnUrl(aliPayResource.getReturnUrl());
         request.setNotifyUrl(aliPayResource.getNotifyUrl());
 
@@ -86,7 +89,7 @@ public class AliPayServiceImpl implements AliPayService {
         String alipayForm = "";
         try {
             log.info("通过SDK向支付宝发起支付请求：{}", request);
-            AlipayTradeWapPayResponse response = getAlipayClient().pageExecute(request);
+            AlipayTradePagePayResponse response = getAlipayClient().pageExecute(request);
             if(response.isSuccess()){
                 log.info("支付宝SDK支付请求调用成功，接收应答：{}", response);
                 alipayForm = response.getBody();
