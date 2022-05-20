@@ -25,6 +25,4 @@ public class AliPayResource {
     private String signType;
     private String charset;
     private String gatewayUrl;
-
-    private String productCode;
 }

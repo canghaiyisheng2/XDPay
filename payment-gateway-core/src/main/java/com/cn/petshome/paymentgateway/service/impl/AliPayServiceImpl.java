@@ -71,6 +71,8 @@ public class AliPayServiceImpl implements AliPayService {
     public String goPay(PayOrderPO order) throws PaymentException {
         log.info("进入支付宝下单方法，入参：{}", order);
 
+        String productCode = "FAST_INSTANT_TRADE_PAY";
+
         //设置请求参数
 //        AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
@@ -82,7 +84,7 @@ public class AliPayServiceImpl implements AliPayService {
         String totalAmount = new BigDecimal(order.getActualPayAmt()).divide(new BigDecimal(100)).toString();
         bizContent.put(TOTAL_AMOUNT, totalAmount);
         bizContent.put(SUBJECT, order.getSubject());
-        bizContent.put(PRODUCT_CODE, aliPayResource.getProductCode());
+        bizContent.put(PRODUCT_CODE, productCode);
 
         request.setBizContent(bizContent.toString());
 
