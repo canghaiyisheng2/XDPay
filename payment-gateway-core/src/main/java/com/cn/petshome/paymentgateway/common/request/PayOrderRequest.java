@@ -4,6 +4,7 @@ import com.cn.petshome.paymentgateway.po.OrderPayMethodPO;
 import com.cn.xidian.fixedLength.FixedLength;
 import com.cn.xidian.fixedLength.Resolver;
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -46,6 +47,7 @@ public class PayOrderRequest {
 
     @NotBlank(message = "异步通知地址不得为空")
     @FixedLength(256)
+    @URL
     private String notifyUrl;
 
     @NotBlank(message = "订单标题不得为空")

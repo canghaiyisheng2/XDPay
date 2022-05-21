@@ -1,9 +1,8 @@
 package com.cn.petshome.paymentgateway.controller;
 
 import com.cn.petshome.paymentgateway.common.response.ResponseBean;
-import com.cn.petshome.paymentgateway.common.util.PaymentChannelEnum;
+import com.cn.petshome.paymentgateway.common.util.enums.PaymentChannelEnum;
 import com.cn.petshome.paymentgateway.service.NotifyService;
-import com.cn.petshome.paymentgateway.service.WechatPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

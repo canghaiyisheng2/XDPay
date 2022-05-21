@@ -1,5 +1,6 @@
 package com.cn.petshome.paymentgateway.common.config;
 
+import com.cn.petshome.paymentgateway.common.exception.ExternalException;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
 import com.cn.petshome.paymentgateway.common.response.ResponseBean;
 import com.cn.petshome.paymentgateway.common.exception.DaoException;
@@ -73,5 +74,16 @@ public class GatewayExceptionHandler {
     public ResponseBean<String> handlerHttpClientException(HttpClientException httpClientException){
         log.error("HttpClient异常", httpClientException);
         return ResponseBean.buildError(httpClientException.getMessage());
+    }
+
+    /**
+     *
+     * ExternalException异常处理
+     * @param externalException 异常对象
+     */
+    @ExceptionHandler(value = {ExternalException.class})
+    public ResponseBean<String> handlerExternalException(ExternalException externalException){
+        log.error("HttpClient异常", externalException);
+        return ResponseBean.buildError(externalException.getMessage());
     }
 }

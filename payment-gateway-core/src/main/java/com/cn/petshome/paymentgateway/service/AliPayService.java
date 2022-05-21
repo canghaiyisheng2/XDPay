@@ -1,5 +1,6 @@
 package com.cn.petshome.paymentgateway.service;
 
+import com.cn.petshome.paymentgateway.common.exception.ApiException;
 import com.cn.petshome.paymentgateway.common.exception.NotifyException;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
 import com.cn.petshome.paymentgateway.bo.NotifyInfo;
@@ -22,7 +23,7 @@ public interface AliPayService {
      * @date 2022/1/17 11:17
      * @throws PaymentException
      */
-    public String goPay(PayOrderPO order) throws PaymentException;
+    public String goPay(PayOrderPO order) throws ApiException;
 
     /**
      *

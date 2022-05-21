@@ -22,6 +22,7 @@ public class UnionPayResource {
     private String frontUrl;
     private String backUrl;
     private String frontTransUrl;
+    private String appTransUrl;
     private String singleQueryUrl;
     private String merchantId;
 }

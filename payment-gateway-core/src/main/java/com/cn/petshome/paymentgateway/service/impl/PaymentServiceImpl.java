@@ -1,12 +1,16 @@
 package com.cn.petshome.paymentgateway.service.impl;
 
 import com.cn.petshome.paymentgateway.bo.NotifyInfo;
+import com.cn.petshome.paymentgateway.common.exception.ApiException;
 import com.cn.petshome.paymentgateway.common.exception.ExternalException;
 import com.cn.petshome.paymentgateway.common.exception.PaymentException;
 import com.cn.petshome.paymentgateway.common.request.PayOrderRequest;
 import com.cn.petshome.paymentgateway.common.response.ResponseBean;
 import com.cn.petshome.paymentgateway.common.response.PrePlacePayOrderResponse;
 import com.cn.petshome.paymentgateway.common.util.*;
+import com.cn.petshome.paymentgateway.common.util.enums.PaymentChannelEnum;
+import com.cn.petshome.paymentgateway.common.util.enums.PaymentKeyEnum;
+import com.cn.petshome.paymentgateway.common.util.enums.StatusEnum;
 import com.cn.petshome.paymentgateway.service.*;
 import com.cn.petshome.paymentgateway.common.exception.DaoException;
 import com.cn.petshome.paymentgateway.mapper.OrderPayMethodMapper;
@@ -23,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -316,7 +319,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         // 冻结代金券
-        String holdNo = externalService.callPointFrozen(order.getUserId(), couponPayTxnJnlPO.getNumber().longValue());
+        String holdNo = externalService.callCouponFrozen(order.getUserId(), couponPayTxnJnlPO.getNumber().toString());
 
         couponPayTxnJnlPO.setResponseTxnJnl(NumberGeneratorUtil.getTxnNumbere());
         String status = StringUtils.hasLength(holdNo) ?
@@ -400,56 +403,59 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("进入选择支付渠道并下单方法，入参：{}, {}, {}", channelKey, order, cashPayTxnJnlPO);
 
         String returnForm = "";
+        boolean isSuccess = true;
 
-        switch (channelKey) {
-            case CHANNEL_TYPE_WEIXINPAY: {
-                log.info("选择微信渠道");
-                returnForm = wechatPayService.goPay(order);
-                break;
-            }
-            //支付宝
-            case CHANNEL_TYPE_ALIPAY: {
-                log.info("选择支付宝渠道");
-                returnForm = aliPayService.goPay(order);
-                break;
-            }
-            //银联
-            case CHANNEL_TYPE_UNIONPAY: {
-                log.info("选择银联渠道");
-                returnForm = unionPayService.goPay(order);
-                break;
-            }
-            default: break;
-        }
-        String status = StringUtils.hasLength(returnForm) ?
-                StatusEnum.PAY_TXN_JNL_STATUS_SUCCESS.getCode()
-                : StatusEnum.PAY_TXN_JNL_STATUS_FAIL.getCode();
-        cashPayTxnJnlPO.setStatus(status);
-        cashPayTxnJnlPO.setResponseTxnJnl(NumberGeneratorUtil.getTxnNumbere());
         try {
-            log.info("根据渠道请求结果更新流水表：{}", cashPayTxnJnlPO);
-            payTxnJnlMapper.updateByRequestTxnJnl(cashPayTxnJnlPO);
-        }catch (DataAccessException dataAccessException){
-            throw new DaoException("现金流水更新失败", dataAccessException);
-        }
-        if (!StringUtils.hasLength(returnForm)) {
+            switch (channelKey) {
+                case CHANNEL_TYPE_WEIXINPAY: {
+                    log.info("选择微信渠道");
+                    returnForm = wechatPayService.goPay(order);
+                    break;
+                }
+                //支付宝
+                case CHANNEL_TYPE_ALIPAY: {
+                    log.info("选择支付宝渠道");
+                    returnForm = aliPayService.goPay(order);
+                    break;
+                }
+                //银联
+                case CHANNEL_TYPE_UNIONPAY: {
+                    log.info("选择银联渠道");
+                    returnForm = unionPayService.goPay(order);
+                    break;
+                }
+                default: break;
+            }
+        }catch (ApiException apiException){
             reverse(order);
-            //发送异步通知
-            NotifyInfo notifyInfo = new NotifyInfo(order.getPayOrderId(),
-                    order.getNotifyUrl(), NotifyInfo.TRADE_FAIL);
-            rocketmqProducerService.sendMessage("NotifyMessage", "notify", notifyInfo.toJson());
+            isSuccess = false;
+            throw new PaymentException(apiException.getMessage(), apiException);
+        }finally {
+            String status = isSuccess ?
+                    StatusEnum.PAY_TXN_JNL_STATUS_SUCCESS.getCode()
+                    : StatusEnum.PAY_TXN_JNL_STATUS_FAIL.getCode();
+            cashPayTxnJnlPO.setStatus(status);
+            cashPayTxnJnlPO.setResponseTxnJnl(NumberGeneratorUtil.getTxnNumbere());
+            try {
+                log.info("根据渠道请求结果更新流水表：{}", cashPayTxnJnlPO);
+                payTxnJnlMapper.updateByRequestTxnJnl(cashPayTxnJnlPO);
+            }catch (DataAccessException dataAccessException){
+                log.error("现金流水更新失败", dataAccessException);
+            }
+
+            //更新订单
+            order.setFinishDate(new Date());
+            order.setFinishTime(new SimpleDateFormat("HH:mm:ss").format(new Date()));
+            order.setStatus(StatusEnum.PAY_ORDER_STATUS_PLACED.getCode());
+            try {
+                log.info("更新支付订单表：{}", cashPayTxnJnlPO);
+                payOrderMapper.updateByPayOrderId(order);
+            }catch (DataAccessException dataAccessException){
+                log.error("支付订单更新失败", dataAccessException);
+            }
         }
 
-        //更新订单
-        order.setFinishDate(new Date());
-        order.setFinishTime(new SimpleDateFormat("HH:mm:ss").format(new Date()));
-        order.setStatus(StatusEnum.PAY_ORDER_STATUS_PLACED.getCode());
-        try {
-            log.info("更新支付订单表：{}", cashPayTxnJnlPO);
-            payOrderMapper.updateByPayOrderId(order);
-        }catch (DataAccessException dataAccessException){
-            throw new DaoException("支付订单更新失败", dataAccessException);
-        }
+
 
         log.info("选择支付渠道并下单完成，返回支付表单：{}", returnForm);
         return returnForm;

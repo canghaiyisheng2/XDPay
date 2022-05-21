@@ -1,4 +1,4 @@
-package com.cn.petshome.paymentgateway.common.util;
+package com.cn.petshome.paymentgateway.common.util.enums;
 
 /**
  *

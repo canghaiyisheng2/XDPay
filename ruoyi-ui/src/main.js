@@ -38,6 +38,9 @@ import DictTag from '@/components/DictTag'
 import VueMeta from 'vue-meta'
 // 字典数据组件
 import DictData from '@/components/DictData'
+//生成二维码
+import VueQriously from 'vue-qriously';
+Vue.use(VueQriously);
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts

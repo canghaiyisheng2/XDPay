@@ -30,4 +30,13 @@ public class NumberGeneratorUtil {
     public static String getTxnNumbere() {
         return "Txn_" + getRandomNumber(3) + getTimeString() + getRandomNumber(3);
     }
+
+    public static String getPointNumbere() {
+        return "P_" + getTimeString() + getRandomNumber(4);
+    }
+
+    public static String getCouponNumbere() {
+        return "C_" + getTimeString() + getRandomNumber(4);
+    }
+
 }

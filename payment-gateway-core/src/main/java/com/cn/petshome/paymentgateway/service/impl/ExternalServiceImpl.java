@@ -1,6 +1,8 @@
 package com.cn.petshome.paymentgateway.service.impl;
 
+import com.cn.petshome.paymentgateway.common.config.CommonOption;
 import com.cn.petshome.paymentgateway.common.exception.ExternalException;
+import com.cn.petshome.paymentgateway.common.util.NumberGeneratorUtil;
 import com.cn.petshome.paymentgateway.service.ExternalService;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
@@ -13,12 +15,7 @@ import org.springframework.stereotype.Service;
  * @date 2022/1/18 17:39
  */
 @Service
-@ConfigurationProperties(prefix="methods")
-@PropertySource("classpath:payment.properties")
 public class ExternalServiceImpl implements ExternalService {
-
-    private boolean usePoint;
-    private boolean useCoupon;
 
     /**
      *
@@ -29,14 +26,14 @@ public class ExternalServiceImpl implements ExternalService {
      */
     @Override
     public String callPointFrozen(String userId, Long frozenPoint) {
-        if(!usePoint){
+        if(!CommonOption.usePoint){
             throw new ExternalException("积分功能已禁用");
         }
 
         /*
             添加对应功能代码调用其他模块
          */
-        return null;
+        return NumberGeneratorUtil.getPointNumbere();
     }
 
     /**
@@ -50,7 +47,7 @@ public class ExternalServiceImpl implements ExternalService {
     @Override
     @Async
     public boolean callPointUnFrozen(String userId, String holdNo){
-        if(!usePoint){
+        if(!CommonOption.usePoint){
             throw new ExternalException("积分功能已禁用");
         }
 
@@ -72,7 +69,7 @@ public class ExternalServiceImpl implements ExternalService {
     @Override
     @Async
     public boolean callPointUnFrozenWithDraw(String userId, String holdNo){
-        if(!usePoint){
+        if(!CommonOption.usePoint){
             throw new ExternalException("积分功能已禁用");
         }
 
@@ -93,7 +90,7 @@ public class ExternalServiceImpl implements ExternalService {
      */
     @Override
     public String callCouponFrozen(String userId, String holdNo) {
-        if(!useCoupon){
+        if(!CommonOption.useCoupon){
             throw new ExternalException("代金券功能已禁用");
         }
 
@@ -101,7 +98,8 @@ public class ExternalServiceImpl implements ExternalService {
             添加对应功能代码调用其他模块
          */
 
-        return null;
+        return NumberGeneratorUtil.getCouponNumbere();
+
     }
 
     /**
@@ -115,7 +113,7 @@ public class ExternalServiceImpl implements ExternalService {
      */
     @Override
     public boolean callCouponUnFrozen(String userId, String holdNo) {
-        if(!useCoupon){
+        if(!CommonOption.useCoupon){
             throw new ExternalException("代金券功能已禁用");
         }
 
@@ -136,7 +134,7 @@ public class ExternalServiceImpl implements ExternalService {
      */
     @Override
     public boolean callCouponUnFrozenWithDraw(String userId, String holdNo){
-        if(!useCoupon){
+        if(!CommonOption.useCoupon){
             throw new ExternalException("代金券功能已禁用");
         }
 

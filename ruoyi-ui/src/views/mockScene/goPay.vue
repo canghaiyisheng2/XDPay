@@ -19,16 +19,6 @@
                     placeholder="请输入订单总金额"
                 />
             </el-form-item>
-            <el-form-item label="订单类型" prop="requestOrderType">
-                <el-select v-model="payOrder.requestOrderType" placeholder="请选择订单类型" clearable>
-                    <el-option
-                        v-for="dict in dict.type.request_order_type"
-                        :key="dict.value"
-                        :label="dict.label"
-                        :value="dict.value"
-                    />
-                </el-select>
-            </el-form-item>
             <el-form-item label="支付渠道" prop="channelType">
                 <el-select v-model="payOrder.channelType" placeholder="请选择支付渠道" clearable>
                     <el-option
@@ -36,6 +26,16 @@
                         :key="dict.value"
                         :label="dict.label"
                         :value="dict.value"
+                    />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="支付类型" prop="paymentType">
+                <el-select v-model="payOrder.paymentType" placeholder="请选择支付类型" clearable>
+                    <el-option
+                        v-for="dict in dict.type.payment_type"
+                                    :key="dict.value"
+                                    :label="dict.label"
+                                    :value="dict.value"
                     />
                 </el-select>
             </el-form-item>
@@ -82,11 +82,23 @@
                 <el-button type="danger" @click="goPay">确认支付</el-button>
             </el-form-item>
         </el-form>
+
+        <el-dialog
+            title="支付二维码"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <div class="qr-class">
+                <qriously :value="qrCode" size = "300" backgroundAlpha="1"/>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">已完成支付，退出</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 import request from '@/utils/gatewayRequest'
 export default {
     dicts: ['request_order_type', 'channel_type', 'payment_type'],
@@ -101,7 +113,7 @@ export default {
                 "notifyUrl": "",
                 "orderAppendix": "",
                 "subject": "",
-                "paymentType":"默认类型",
+                "paymentType":"",
                 "payMethods": [{
                     "payMethod": 0,
                     "number": 1,
@@ -120,6 +132,8 @@ export default {
             usePayMethods:[true, false, false],
             pointAmount:0,
             couponAmount:0,
+            dialogVisible:false,
+            qrCode:""
         }
     },
     computed: {
@@ -141,14 +155,27 @@ export default {
                       method: 'post',
                       data: _this.payOrder
                     }).then(res => {
-                                        let win = window.open()
-                                        win.document.write(res.data.returnForm);
-                                  });
+                        if(_this.payOrder.paymentType === "2"){
+                            _this.qrCode = res.data.returnForm;
+                            _this.dialogVisible = true;
+                        }else{
+                            let win = window.open()
+                            win.document.write(res.data.returnForm);
+                        }
+                                        
+                    });
         },
         //点击复选框
         onCheckBoxChange(payMethod){
             this.usePayMethods[payMethod] = !this.usePayMethods[payMethod];
             this.payOrder.payMethods[payMethod].number = this.usePayMethods[payMethod]?1:0;
+        },
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+            .then(_ => {
+                done();
+            })
+            .catch(_ => {});
         }
     },
 }
@@ -160,5 +187,9 @@ export default {
         height: 100px;
         width: 100px;
         margin: 100px;
+    }
+
+    .qr-class{
+        padding: 0 16%;
     }
 </style>
